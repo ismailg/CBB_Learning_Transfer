@@ -208,10 +208,61 @@ structurally similar Fire-Water-Grass game, and a less similar Numbers
 results, we find evidence that participants transfer the learned
 strategy of their opponent to other games, and that this transfer is
 moderated by the sophistication of their opponent and the similarity
-between the games. Moreover, using computational modelling, we find
-evidence that participants switch from relying on an opponent model in
-the early stages of the games, to a more habitual and cognitively less
-demanding strategy in the later stages of the games.
+between the games.
+
+\hypertarget{computational-modelling-of-learning-transfer}{%
+\section{Computational modelling of learning
+transfer}\label{computational-modelling-of-learning-transfer}}
+
+**In order to have a better understanding of the learning shown by
+participants, we fit various computational models to the data. We will
+distinguish between two main types of learning models. We consider first
+computational models from the game learning literature such as
+Reinforcement Learning (RL) models. A simple RL model allows the players
+to compute the values of actions conditional on past play and reinforce
+previously successful actions. Crucially however, it will not be able to
+account for zero shot generalisation to a different game as there is no
+model feature allowing mapping between actions and states from the
+source task to the target task.
+
+The same can be said for other successful models from the learning
+literature in behavioral game theory such as the Experience Weighted
+Attraction (EWA) model (Ho, Camerer, and Chong 2004) which combines two
+seemingly different approaches, namely reinforcement learning and belief
+learning. Belief learning models are based on the assumption that
+players keep track of their opponent's frequency of past actions, and
+best respond to that. By contrast, reinforcement learning does not
+explicitly take into account beliefs about other players, but simply
+increases the probability of repeating a more rewarding action. While
+the EWA model has been shown to perform better than either RL or belief
+learning alone in various repeated games, it is also incapabale of zero
+shot generalisation of the the strategy of an opponent using level-k
+iterated reasoning.
+
+To account for the learning transfer, we need to specify models of
+decision making capable of abstracting away from the game features, and
+learning something about the opponent that is transferable, such as a
+generic rule. If we build an opponent that uses level-k iterated
+reasoning strategies, then we need a model capable of infering the depth
+of reasoning of the opponent. To that end, we will use a Bayesian
+Cognitive Hierarchy (BCH) model in which the participant attempts to
+learn the type of opponent they are facing through Bayesian learning.
+Unlike the models above, the BCH model allows for between-game transfer,
+as knowledge of the level of the opponent can be used to generate
+predictions in games that have not been played before. This
+generalization is done simply by using the posterior
+\(P(\text{level} = k|\mathcal{D}_T)\) from the previous game as the
+prior distribution in the next game.
+
+Finally, we explore the possibility, in our computational treatment of
+experiment data, that participants are able to use different models at
+different stages of the game. It might be more efficient to use a
+reinforcement learning model in the latter stages of repeated
+interactions against the same opponent instead of keeping a more
+accurate but also more complexe explicit opponent model. The latter can
+be useful for early shot generalisation to new games but will be
+cognitively taxing relative to simpler reinforcement learnings based
+models later on.**
 
 \hypertarget{experiment-1}{%
 \section{Experiment 1}\label{experiment-1}}
@@ -361,7 +412,7 @@ thanked for their participation.
 
 \begin{figure}
 
-{\centering \includegraphics[width=\textwidth]{CBB_files/figure-latex/exp1-avg-scores-game-1} 
+{\centering \includegraphics[width=\textwidth]{CBB_v2_files/figure-latex/exp1-avg-scores-game-1} 
 
 }
 
@@ -433,7 +484,7 @@ game were indeed not significantly different from 0
 
 \begin{figure}
 
-{\centering \includegraphics[width=\textwidth]{CBB_files/figure-latex/exp1-early-score-by-opp-1} 
+{\centering \includegraphics[width=\textwidth]{CBB_v2_files/figure-latex/exp1-early-score-by-opp-1} 
 
 }
 
@@ -605,7 +656,7 @@ scores, we reject the null hypothesis of random play in all three games
 
 \begin{figure}
 
-{\centering \includegraphics[width=\textwidth]{CBB_files/figure-latex/exp2-score-by-opp-1} 
+{\centering \includegraphics[width=\textwidth]{CBB_v2_files/figure-latex/exp2-score-by-opp-1} 
 
 }
 
@@ -662,7 +713,7 @@ games when facing the same opponent.
 
 \begin{figure}
 
-{\centering \includegraphics[width=\textwidth]{CBB_files/figure-latex/exp2-early-score-by-opp-1} 
+{\centering \includegraphics[width=\textwidth]{CBB_v2_files/figure-latex/exp2-early-score-by-opp-1} 
 
 }
 
@@ -910,7 +961,7 @@ best described by one of the BCH models or the EWA model.
 
 \begin{figure}
 
-{\centering \includegraphics[width=\textwidth]{CBB_files/figure-latex/exp1-comp-models-1} 
+{\centering \includegraphics[width=\textwidth]{CBB_v2_files/figure-latex/exp1-comp-models-1} 
 
 }
 
@@ -924,7 +975,7 @@ participants' action choices.
 
 \begin{figure}
 
-{\centering \includegraphics[width=\textwidth]{CBB_files/figure-latex/exp2-comp-models-1} 
+{\centering \includegraphics[width=\textwidth]{CBB_v2_files/figure-latex/exp2-comp-models-1} 
 
 }
 
@@ -952,7 +1003,7 @@ that of the BCH model.
 
 \begin{figure}
 
-{\centering \includegraphics[width=\textwidth]{CBB_files/figure-latex/exp1-lik-by-tr-1} 
+{\centering \includegraphics[width=\textwidth]{CBB_v2_files/figure-latex/exp1-lik-by-tr-1} 
 
 }
 
@@ -968,7 +1019,7 @@ the BCH model.
 
 \begin{figure}
 
-{\centering \includegraphics[width=\textwidth]{CBB_files/figure-latex/exp2-lik-by-tr-1} 
+{\centering \includegraphics[width=\textwidth]{CBB_v2_files/figure-latex/exp2-lik-by-tr-1} 
 
 }
 
@@ -1004,7 +1055,7 @@ a particular strategy, they continue using it throughout the experiment.
 
 \begin{figure}
 
-{\centering \includegraphics[width=\textwidth]{CBB_files/figure-latex/exp1-posteriors-plot-1} 
+{\centering \includegraphics[width=\textwidth]{CBB_v2_files/figure-latex/exp1-posteriors-plot-1} 
 
 }
 
@@ -1034,7 +1085,7 @@ dominant, however.
 
 \begin{figure}
 
-{\centering \includegraphics[width=\textwidth]{CBB_files/figure-latex/exp2-posteriors-plot-1} 
+{\centering \includegraphics[width=\textwidth]{CBB_v2_files/figure-latex/exp2-posteriors-plot-1} 
 
 }
 

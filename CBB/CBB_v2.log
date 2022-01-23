@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.9.16)  19 JAN 2022 15:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.9.16)  21 JAN 2022 12:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**CBB.tex
-(./CBB.tex
+**CBB_v2.tex
+(./CBB_v2.tex
 LaTeX2e <2021-06-01> patch level 1
 L3 programming layer <2021-08-27> (./svjour3.cls
 Document Class: svjour3 2007/05/08 v3.2 
@@ -432,7 +432,7 @@ ef
 File: l3backend-pdftex.def 2021-08-04 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count317
 \l__pdf_internal_box=\box74
-) (./CBB.aux
+) (./CBB_v2.aux
 
 LaTeX Warning: Label `fig:exp2-score-by-opp' multiply defined.
 
@@ -440,7 +440,7 @@ LaTeX Warning: Label `fig:exp2-score-by-opp' multiply defined.
 LaTeX Warning: Label `ref:figure4-caption' multiply defined.
 
 )
-\openout1 = `CBB.aux'.
+\openout1 = `CBB_v2.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 52.
 LaTeX Font Info:    ... okay on input line 52.
@@ -488,9 +488,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 52.
 LaTeX Info: Redefining \pageref on input line 52.
 LaTeX Info: Redefining \nameref on input line 52.
-(./CBB.out) (./CBB.out)
+(./CBB_v2.out) (./CBB_v2.out)
 \@outlinefile=\write3
-\openout3 = `CBB.out'.
+\openout3 = `CBB_v2.out'.
 
 SVJour3 warning: Missing \journalname
 
@@ -506,191 +506,201 @@ Underfull \hbox (badness 10000) in paragraph at lines 87--110
 Underfull \vbox (badness 2057) has occurred while \output is active []
 
 [1{/Users/mbp17/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] 
-[2] [3] [4] [5pdfTeX warning (ext4): destination with the same identifier (name
-{table.1}) has been already used, duplicate ignored
+[2] [3] [4] [5] [6pdfTeX warning (ext4): destination with the same identifier (
+name{table.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.352 
+l.403 
       ]
-<../images/feedback_rps.png, id=83, 452.4102pt x 263.5446pt>
+<../images/feedback_rps.png, id=94, 452.4102pt x 263.5446pt>
 File: ../images/feedback_rps.png Graphic file (type png)
 <use ../images/feedback_rps.png>
-Package pdftex.def Info: ../images/feedback_rps.png  used on input line 355.
+Package pdftex.def Info: ../images/feedback_rps.png  used on input line 406.
 (pdftex.def)             Requested size: 338.0pt x 196.89792pt.
-<CBB_files/figure-latex/exp1-avg-scores-game-1.pdf, id=85, 578.16pt x 289.08pt>
-
-File: CBB_files/figure-latex/exp1-avg-scores-game-1.pdf Graphic file (type pdf)
-
-<use CBB_files/figure-latex/exp1-avg-scores-game-1.pdf>
-Package pdftex.def Info: CBB_files/figure-latex/exp1-avg-scores-game-1.pdf  use
-d on input line 364.
+<CBB_v2_files/figure-latex/exp1-avg-scores-game-1.pdf, id=96, 578.16pt x 289.08
+pt>
+File: CBB_v2_files/figure-latex/exp1-avg-scores-game-1.pdf Graphic file (type p
+df)
+<use CBB_v2_files/figure-latex/exp1-avg-scores-game-1.pdf>
+Package pdftex.def Info: CBB_v2_files/figure-latex/exp1-avg-scores-game-1.pdf  
+used on input line 415.
 (pdftex.def)             Requested size: 338.0pt x 168.99863pt.
-[6pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
+[7pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.384 
-       <../images/feedback_rps.png>] [7pdfTeX warning (ext4): destination with 
+l.465 
+       <../images/feedback_rps.png>] [8pdfTeX warning (ext4): destination with 
 the same identifier (name{figure.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.433 
-       <./CBB_files/figure-latex/exp1-avg-scores-game-1.pdf>]
-<CBB_files/figure-latex/exp1-early-score-by-opp-1.pdf, id=113, 578.16pt x 289.0
-8pt>
-File: CBB_files/figure-latex/exp1-early-score-by-opp-1.pdf Graphic file (type p
-df)
-<use CBB_files/figure-latex/exp1-early-score-by-opp-1.pdf>
-Package pdftex.def Info: CBB_files/figure-latex/exp1-early-score-by-opp-1.pdf  
-used on input line 436.
+l.484 
+       <./CBB_v2_files/figure-latex/exp1-avg-scores-game-1.pdf>]
+<CBB_v2_files/figure-latex/exp1-early-score-by-opp-1.pdf, id=124, 578.16pt x 28
+9.08pt>
+File: CBB_v2_files/figure-latex/exp1-early-score-by-opp-1.pdf Graphic file (typ
+e pdf)
+<use CBB_v2_files/figure-latex/exp1-early-score-by-opp-1.pdf>
+Package pdftex.def Info: CBB_v2_files/figure-latex/exp1-early-score-by-opp-1.pd
+f  used on input line 487.
 (pdftex.def)             Requested size: 338.0pt x 168.99863pt.
-[8pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) 
+[9pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.467 
-       <./CBB_files/figure-latex/exp1-early-score-by-opp-1.pdf>]
-Overfull \hbox (2.09772pt too wide) in paragraph at lines 515--539
+l.518 
+       <./CBB_v2_files/figure-latex/exp1-early-score-by-opp-1.pdf>]
+Overfull \hbox (2.09772pt too wide) in paragraph at lines 566--590
 \OT1/cmr/m/n/10 Participants played three games: Rock-Paper-Scissors (RPS), Fir
 e-Water-Grass
  []
 
-[9]
-<../images/shootout.png, id=144, 1927.2pt x 1084.05pt>
+[10]
+<../images/shootout.png, id=156, 1927.2pt x 1084.05pt>
 File: ../images/shootout.png Graphic file (type png)
 <use ../images/shootout.png>
-Package pdftex.def Info: ../images/shootout.png  used on input line 549.
+Package pdftex.def Info: ../images/shootout.png  used on input line 600.
 (pdftex.def)             Requested size: 338.0pt x 190.12512pt.
-[10]
-<CBB_files/figure-latex/exp2-score-by-opp-1.pdf, id=156, 578.16pt x 289.08pt>
-File: CBB_files/figure-latex/exp2-score-by-opp-1.pdf Graphic file (type pdf)
-<use CBB_files/figure-latex/exp2-score-by-opp-1.pdf>
-Package pdftex.def Info: CBB_files/figure-latex/exp2-score-by-opp-1.pdf  used o
-n input line 608.
-(pdftex.def)             Requested size: 338.0pt x 168.99863pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
 [11pdfTeX warning (ext4): destination with the same identifier (name{figure.4})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.637 
-       <../images/shootout.png>] [12pdfTeX warning (ext4): destination with the
- same identifier (name{figure.5}) has been already used, duplicate ignored
+l.636 
+       <../images/shootout.png>]
+<CBB_v2_files/figure-latex/exp2-score-by-opp-1.pdf, id=165, 578.16pt x 289.08pt
+>
+File: CBB_v2_files/figure-latex/exp2-score-by-opp-1.pdf Graphic file (type pdf)
+
+<use CBB_v2_files/figure-latex/exp2-score-by-opp-1.pdf>
+Package pdftex.def Info: CBB_v2_files/figure-latex/exp2-score-by-opp-1.pdf  use
+d on input line 659.
+(pdftex.def)             Requested size: 338.0pt x 168.99863pt.
+[12] [13pdfTeX warning (ext4): destination with the same identifier (name{figur
+e.5}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.662 
-       <./CBB_files/figure-latex/exp2-score-by-opp-1.pdf>]
-<CBB_files/figure-latex/exp2-early-score-by-opp-1.pdf, id=183, 578.16pt x 289.0
-8pt>
-File: CBB_files/figure-latex/exp2-early-score-by-opp-1.pdf Graphic file (type p
-df)
-<use CBB_files/figure-latex/exp2-early-score-by-opp-1.pdf>
-Package pdftex.def Info: CBB_files/figure-latex/exp2-early-score-by-opp-1.pdf  
-used on input line 665.
+l.713 
+       <./CBB_v2_files/figure-latex/exp2-score-by-opp-1.pdf>]
+<CBB_v2_files/figure-latex/exp2-early-score-by-opp-1.pdf, id=194, 578.16pt x 28
+9.08pt>
+File: CBB_v2_files/figure-latex/exp2-early-score-by-opp-1.pdf Graphic file (typ
+e pdf)
+<use CBB_v2_files/figure-latex/exp2-early-score-by-opp-1.pdf>
+Package pdftex.def Info: CBB_v2_files/figure-latex/exp2-early-score-by-opp-1.pd
+f  used on input line 716.
 (pdftex.def)             Requested size: 338.0pt x 168.99863pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[13pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
+[14pdfTeX warning (ext4): destination with the same identifier (name{figure.6})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.698 
-       <./CBB_files/figure-latex/exp2-early-score-by-opp-1.pdf>] [14] [15] [16]
-[17]
-<CBB_files/figure-latex/exp1-comp-models-1.pdf, id=230, 469.755pt x 325.215pt>
-File: CBB_files/figure-latex/exp1-comp-models-1.pdf Graphic file (type pdf)
-<use CBB_files/figure-latex/exp1-comp-models-1.pdf>
-Package pdftex.def Info: CBB_files/figure-latex/exp1-comp-models-1.pdf  used on
- input line 913.
+l.749 
+       <./CBB_v2_files/figure-latex/exp2-early-score-by-opp-1.pdf>] [15] [16] [
+17] [18]
+<CBB_v2_files/figure-latex/exp1-comp-models-1.pdf, id=239, 469.755pt x 325.215p
+t>
+File: CBB_v2_files/figure-latex/exp1-comp-models-1.pdf Graphic file (type pdf)
+<use CBB_v2_files/figure-latex/exp1-comp-models-1.pdf>
+Package pdftex.def Info: CBB_v2_files/figure-latex/exp1-comp-models-1.pdf  used
+ on input line 964.
 (pdftex.def)             Requested size: 338.0pt x 234.00078pt.
-<CBB_files/figure-latex/exp2-comp-models-1.pdf, id=232, 469.755pt x 325.215pt>
-File: CBB_files/figure-latex/exp2-comp-models-1.pdf Graphic file (type pdf)
-<use CBB_files/figure-latex/exp2-comp-models-1.pdf>
-Package pdftex.def Info: CBB_files/figure-latex/exp2-comp-models-1.pdf  used on
- input line 927.
+<CBB_v2_files/figure-latex/exp2-comp-models-1.pdf, id=241, 469.755pt x 325.215p
+t>
+File: CBB_v2_files/figure-latex/exp2-comp-models-1.pdf Graphic file (type pdf)
+<use CBB_v2_files/figure-latex/exp2-comp-models-1.pdf>
+Package pdftex.def Info: CBB_v2_files/figure-latex/exp2-comp-models-1.pdf  used
+ on input line 978.
 (pdftex.def)             Requested size: 338.0pt x 234.00078pt.
-[18] [19pdfTeX warning (ext4): destination with the same identifier (name{figur
+[19] [20pdfTeX warning (ext4): destination with the same identifier (name{figur
 e.7}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.952 
-      pdfTeX warning (ext4): destination with the same identifier (name{figure.
-8}) has been already used, duplicate ignored
+l.1003 
+       pdfTeX warning (ext4): destination with the same identifier (name{figure
+.8}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.952 
-       <./CBB_files/figure-latex/exp1-comp-models-1.pdf> <./CBB_files/figure-la
-tex/exp2-comp-models-1.pdf>]
-<CBB_files/figure-latex/exp1-lik-by-tr-1.pdf, id=258, 469.755pt x 325.215pt>
-File: CBB_files/figure-latex/exp1-lik-by-tr-1.pdf Graphic file (type pdf)
-<use CBB_files/figure-latex/exp1-lik-by-tr-1.pdf>
-Package pdftex.def Info: CBB_files/figure-latex/exp1-lik-by-tr-1.pdf  used on i
-nput line 955.
+l.1003 
+        <./CBB_v2_files/figure-latex/exp1-comp-models-1.pdf> <./CBB_v2_files/fi
+gure-latex/exp2-comp-models-1.pdf>]
+<CBB_v2_files/figure-latex/exp1-lik-by-tr-1.pdf, id=267, 469.755pt x 325.215pt>
+
+File: CBB_v2_files/figure-latex/exp1-lik-by-tr-1.pdf Graphic file (type pdf)
+<use CBB_v2_files/figure-latex/exp1-lik-by-tr-1.pdf>
+Package pdftex.def Info: CBB_v2_files/figure-latex/exp1-lik-by-tr-1.pdf  used o
+n input line 1006.
 (pdftex.def)             Requested size: 338.0pt x 234.00078pt.
-<CBB_files/figure-latex/exp2-lik-by-tr-1.pdf, id=260, 469.755pt x 325.215pt>
-File: CBB_files/figure-latex/exp2-lik-by-tr-1.pdf Graphic file (type pdf)
-<use CBB_files/figure-latex/exp2-lik-by-tr-1.pdf>
-Package pdftex.def Info: CBB_files/figure-latex/exp2-lik-by-tr-1.pdf  used on i
-nput line 971.
+<CBB_v2_files/figure-latex/exp2-lik-by-tr-1.pdf, id=269, 469.755pt x 325.215pt>
+
+File: CBB_v2_files/figure-latex/exp2-lik-by-tr-1.pdf Graphic file (type pdf)
+<use CBB_v2_files/figure-latex/exp2-lik-by-tr-1.pdf>
+Package pdftex.def Info: CBB_v2_files/figure-latex/exp2-lik-by-tr-1.pdf  used o
+n input line 1022.
 (pdftex.def)             Requested size: 338.0pt x 234.00078pt.
-[20pdfTeX warning (ext4): destination with the same identifier (name{figure.9})
+[21pdfTeX warning (ext4): destination with the same identifier (name{figure.9})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1004 
-        <./CBB_files/figure-latex/exp1-lik-by-tr-1.pdf>]
-<CBB_files/figure-latex/exp1-posteriors-plot-1.pdf, id=272, 469.755pt x 325.215
-pt>
-File: CBB_files/figure-latex/exp1-posteriors-plot-1.pdf Graphic file (type pdf)
-
-<use CBB_files/figure-latex/exp1-posteriors-plot-1.pdf>
-Package pdftex.def Info: CBB_files/figure-latex/exp1-posteriors-plot-1.pdf  use
-d on input line 1007.
+l.1055 
+        <./CBB_v2_files/figure-latex/exp1-lik-by-tr-1.pdf>]
+<CBB_v2_files/figure-latex/exp1-posteriors-plot-1.pdf, id=282, 469.755pt x 325.
+215pt>
+File: CBB_v2_files/figure-latex/exp1-posteriors-plot-1.pdf Graphic file (type p
+df)
+<use CBB_v2_files/figure-latex/exp1-posteriors-plot-1.pdf>
+Package pdftex.def Info: CBB_v2_files/figure-latex/exp1-posteriors-plot-1.pdf  
+used on input line 1058.
 (pdftex.def)             Requested size: 338.0pt x 234.00078pt.
-<CBB_files/figure-latex/exp2-posteriors-plot-1.pdf, id=274, 469.755pt x 325.215
-pt>
-File: CBB_files/figure-latex/exp2-posteriors-plot-1.pdf Graphic file (type pdf)
-
-<use CBB_files/figure-latex/exp2-posteriors-plot-1.pdf>
-Package pdftex.def Info: CBB_files/figure-latex/exp2-posteriors-plot-1.pdf  use
-d on input line 1037.
+<CBB_v2_files/figure-latex/exp2-posteriors-plot-1.pdf, id=284, 469.755pt x 325.
+215pt>
+File: CBB_v2_files/figure-latex/exp2-posteriors-plot-1.pdf Graphic file (type p
+df)
+<use CBB_v2_files/figure-latex/exp2-posteriors-plot-1.pdf>
+Package pdftex.def Info: CBB_v2_files/figure-latex/exp2-posteriors-plot-1.pdf  
+used on input line 1088.
 (pdftex.def)             Requested size: 338.0pt x 234.00078pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[21pdfTeX warning (ext4): destination with the same identifier (name{figure.10}
+[22pdfTeX warning (ext4): destination with the same identifier (name{figure.10}
 ) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1042 \end{figure}
-                    <./CBB_files/figure-latex/exp2-lik-by-tr-1.pdf>] [22pdfTeX 
-warning (ext4): destination with the same identifier (name{figure.11}) has been
- already used, duplicate ignored
+l.1093 \end{figure}
+                    <./CBB_v2_files/figure-latex/exp2-lik-by-tr-1.pdf>] [23pdfT
+eX warning (ext4): destination with the same identifier (name{figure.11}) has b
+een already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1085 
-        <./CBB_files/figure-latex/exp1-posteriors-plot-1.pdf>]
+l.1136 
+        <./CBB_v2_files/figure-latex/exp1-posteriors-plot-1.pdf>]
 Underfull \vbox (badness 2213) has occurred while \output is active []
 
-[23pdfTeX warning (ext4): destination with the same identifier (name{figure.12}
+[24pdfTeX warning (ext4): destination with the same identifier (name{figure.12}
 ) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1115 
-        <./CBB_files/figure-latex/exp2-posteriors-plot-1.pdf>] [24] [25] [26]
-Overfull \hbox (1.93004pt too wide) in paragraph at lines 1276--1280
+l.1166 
+        <./CBB_v2_files/figure-latex/exp2-posteriors-plot-1.pdf>] [25] [26] [27
+]
+Overfull \hbox (1.93004pt too wide) in paragraph at lines 1327--1331
 [][]\OT1/cmr/m/n/10 Costa-Gomes, Miguel, Vin-cent P Craw-ford, and Bruno Broset
 a. 2001. ``Cog-
  []
 
-[27]
-Overfull \hbox (0.20044pt too wide) in paragraph at lines 1349--1352
+[28]
+Overfull \hbox (0.20044pt too wide) in paragraph at lines 1400--1403
 [][]\OT1/cmr/m/n/10 ---------. 2003. ``So-phis-ti-cated Learn-ing and Learn-ing
  So-phis-ti-ca-tion.'' \OT1/cmr/m/it/10 Avail-
  []
 
-No file CBB.bbl.
-[28] (./CBB.aux)
+No file CBB_v2.bbl.
+[29] (./CBB_v2.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
@@ -698,17 +708,17 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package rerunfilecheck Info: File `CBB.out' has not changed.
-(rerunfilecheck)             Checksum: 6DCD790AA1E541967AC0E1786C01EE9D;859.
+Package rerunfilecheck Info: File `CBB_v2.out' has not changed.
+(rerunfilecheck)             Checksum: 25A5400AB7E6892794729DF3D86C423A;1134.
  ) 
 Here is how much of TeX's memory you used:
- 10803 strings out of 480559
- 161171 string characters out of 5902619
- 482364 words of memory out of 5000000
- 28106 multiletter control sequences out of 15000+600000
+ 10808 strings out of 480559
+ 161588 string characters out of 5902619
+ 482451 words of memory out of 5000000
+ 28108 multiletter control sequences out of 15000+600000
  410951 words of font info for 54 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,10n,66p,420b,368s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,10n,66p,423b,368s stack positions out of 5000i,500n,10000p,200000b,80000s
  </Users/mbp17/Library/TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000
 .600pk></Users/mbp17/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmbsy10.pfb></Users/mbp17/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfont
@@ -729,10 +739,10 @@ TeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></Users/mbp17/Library/T
 inyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></Users/mbp17/Libra
 ry/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></Users/mbp17/L
 ibrary/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on CBB.pdf (28 pages, 710052 bytes).
+Output written on CBB_v2.pdf (29 pages, 713598 bytes).
 PDF statistics:
- 487 PDF objects out of 1000 (max. 8388607)
- 393 compressed objects within 4 object streams
- 134 named destinations out of 1000 (max. 500000)
- 125 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 497 PDF objects out of 1000 (max. 8388607)
+ 401 compressed objects within 5 object streams
+ 137 named destinations out of 1000 (max. 500000)
+ 133 words of extra memory for PDF output out of 10000 (max. 10000000)
 
