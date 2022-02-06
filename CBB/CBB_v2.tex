@@ -10,6 +10,8 @@
 
 \usepackage[hyphens]{url} % not crucial - just used below for the URL
 \usepackage{hyperref}
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 %
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
@@ -29,11 +31,32 @@
 
 
 
-% tightlist command for lists without linebreak
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
-
+% Pandoc citation processing
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+% for Pandoc 2.8 to 2.10.1
+\newenvironment{cslreferences}%
+  {}%
+  {\par}
+% For Pandoc 2.11+
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc} % for calculating minipage widths
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -49,11 +72,12 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
+
 \begin{document}
 
-
-\title{Transfer of Learned Opponent Models in Zero Sum Games \thanks{The authors have no conflicts of interest to declare that are relevant
-to the content of this article.This work was supported by the UK
+\title{Transfer of Learned Opponent Models in Zero Sum Games \thanks{The
+authors have no conflicts of interest to declare that are relevant to
+the content of this article.This work was supported by the UK
 Engineering and Physical Sciences Research Council under grant
 EP/S515255/1.} }
 
@@ -64,14 +88,14 @@ EP/S515255/1.} }
 
 \institute{
         Ismail Guennouni \at
-     Department of Experimental Psychology, University College London, 26
- Bedford Way, London WC1H 0AP, United Kingdom \\
+     Department of Experimental Psychology, University College London,
+26 Bedford Way, London WC1H 0AP, United Kingdom \\
      \email{\href{mailto:i.guennouni.17@ucl.ac.uk}{\nolinkurl{i.guennouni.17@ucl.ac.uk}}}  %  \\
 %             \emph{Present address:} of F. Author  %  if needed
     \and
         Maarten Speekenbrink \at
-     Department of Experimental Psychology, University College London, 26
- Bedford Way, London WC1H 0AP, United Kingdom \\
+     Department of Experimental Psychology, University College London,
+26 Bedford Way, London WC1H 0AP, United Kingdom \\
      \email{\href{mailto:m.speekenbrink@ucl.ac.uk}{\nolinkurl{m.speekenbrink@ucl.ac.uk}}}  %  \\
 %             \emph{Present address:} of F. Author  %  if needed
     \and
@@ -95,9 +119,7 @@ play against computer agents with human-like limited degrees of iterated
 reasoning. In two experiments, we find that participants deviate from
 Nash equilibrium play and learn to adapt to their opponent's strategy to
 exploit it. Moreover, we show that participants transfer their learning
-to new games and that this transfer is moderated by the similarity
-between games as well as the level of sophistication of the computer
-opponent. Computational modelling shows that players start each game
+to new games. Computational modelling shows that players start each game
 with a model-based learning strategy that facilitates between-game
 transfer of their opponent's strategy, but then switch to behaviour that
 is consistent with a model-free learning strategy in the latter stages
@@ -152,80 +174,78 @@ according to the Nash-equilibrium strategy as well. However, when faced
 with a player who deviates from the Nash-optimal strategy, you may be
 able to exploit this and also deviate from this strategy, increasing
 your performance beyond what is expected at Nash equilibrium. Of course,
-this comes with some risk, as your own deviation from Nash-optimal play
-may leave you open to similar exploitation.
+this comes with a risk, as your own deviation from Nash-optimal play may
+leave you open to similar exploitation.
 
 Studies that focused on whether people can learn to exploit deviations
 from Nash-equilibrium play have mostly looked at the ability of players
-to detect and exploit action-based learning rules (Dyson et al. 2016;
-Spiliopoulos 2013; Shachat and Swarthout 2004). These studies used
-computer opponents that don't adapt their strategy to their human
-opponent, mostly consisting of playing each action with a fixed
+to detect and exploit contingencies in their opponent's actions (Dyson
+et al. 2016; Spiliopoulos 2013; Shachat and Swarthout 2004). These
+studies used computer opponents that don't adapt their strategy to their
+human opponent, mostly consisting of playing each action with a fixed
 probability (a mixed strategy) or using a pre-determined sequence.
-Findings showed that humans are capable of adapting to
+Findings show that humans are capable of adapting to
 non-Nash-equilibrium play and detect patterns in an opponent's history
 of play. However, the use of mixed strategies may have limited people's
 ability to form accurate opponent models.
 
-The game of Rock, Paper, Scissors has emerged as a central paradigm to
-test sequential adversarial reasoning in repeated interactions. Beyond
-frequency action based rules, Dyson (2019) identify cycle-based and
-outcome-based dependencies as important startegies in the repeated RPS
-games. A positive cycle is when a player chooses in trial \(n+1\) an
-action that would have beaten the action chosen in trial \(n\) (choose
+The game of Rock-Paper-Scissors (RPS) has emerged as a central paradigm
+to test sequential adversarial reasoning in repeated interactions.
+Beyond action frequencies, Dyson (2019) identifies cycle-based and
+outcome-based dependencies as important strategies in repeated RPS
+games. A positive cycle is when a player chooses in trial \(t+1\) an
+action that would have beaten the action in trial \(t\) (e.g., playing
 Paper after Rock), while a negative cycle goes in the opposite direction
-by choosing an action in trial \(n+1\) that would have beaten the trial
-\(n\) choice (choose Scissors after Rock). These cycle-based strategies
-can be based on the player's own past choices, or on the opponent's. For
-example, Eyler et al. (2009) show that players repeat previous-round
-actions, or choose actions that beat previous-round actions. Brockbank
-and Vul (2021) defined a hierarchy of strategies based on previous
-actions (base rate of choices) as well as cycle transitions (base rate
-of positive nad negative cycles). Using data on dyads playing 300 rounds
-of RPS with the same opponent,they show that exploitation of non-random
-play leverages simple regularities such as the opponent previous move
-dependencies (player choice given opponent previous choice) as well as
-the transition base rate in prior play (frequency of positive vs
-negative cycles), while more complex regularities remain unexploited.
+by choosing an action in trial \(t+1\) that would have been beaten by
+the action on trial \(t\) (e.g., playing Scissors after Rock). These
+cycle-based strategies can be based on the opponent's or a player's own
+past choices. For example, Eyler et al. (2009) show that players have a
+tendency to repeat their previous-round actions. Brockbank and Vul
+(2021) defined a hierarchy of strategies based on previous actions (base
+rate of choices) as well as cycle transitions (base rate of positive and
+negative cycles). Using data on dyads playing 300 rounds of RPS against
+the same opponent, they show that exploitation of non-random play
+leverages simple regularities between a player's next action and their
+own previous action, and between a player's next action and their
+opponent's previous action, while more complex regularities remain
+unexploited. Outcome based dependencies are another common basis for RPS
+strategies. The idea is to change the likelihood of future actions based
+on the outcome (win, loss, or tie) of the previous round. Heuristics
+such as win-stay/lose-shift are an example of such outcome dependencies.
+Players can also combine outcome and cycle based strategies, choosing to
+cycle in a positive or negative direction depending on whether the
+previous round was won or lost (Wang, Xu, and Zhou 2014; Xu, Zhou, and
+Wang 2013).
 
-Outcome based dependencies are another common basis for RPS strategies.
-The idea is to change the likelihood of future actions based on the
-outcome of previous trials. Heuristics such as win-stay/lose-shift are
-an example of such a dependency. Players can even combine outcome based
-and cycle based strategies: outcome-dependent transitions are such that
-the nature of the cycling (positive or negative) adopted by the player
-depends on the outcome of previous trials (win, tie or loss) (Wang, Xu,
-and Zhou 2014; Xu, Zhou, and Wang 2013).
+Another way to frame these strategies is in terms of of iterative
+reasoning. People may think of their opponents as applying a limited
+number of recursive steps to determine their next action. The type of
+reasoning we refer to takes the form of ``I believe that you believe
+that I believe \ldots{}.'' For example, if I believe that you believe I
+will play Rock (perhaps because I played Rock in the previous round),
+then I would expect you to play Paper, as this beats my Rock. I would
+therefore choose to play Scissors, as this beats your Paper. This
+results in a self-directed negative cycle strategy (playing the action
+that beats ones previous action), but it is the result of applying one
+level of recursive reasoning (player A believes player B believes A will
+repeat their last action, and A best responds to player B's best
+response to this belief).
 
-Another way to frame these strategies is to think of them as different
-manifestations of iterated reasoning. People may think of their
-opponents as applying a limited number of recursive steps to determine
-their next action. The type of reasoning we refer to takes the form of
-``I believe that you believe that I believe \ldots{}''. For example,
-take the game of Rock-Paper-Scissors (RPS). If I believe that you
-believe I will play Rock, then I would expect you to play Paper, as this
-beats my Rock. I would therefore choose to play Scissors, as this beats
-your Paper. Playing an action that would have beaten the opponent action
-in the previous trial is an example of an other-directed positive cycle
-strategy but is also consistent with a player using one iteration of
-recursing reasoning by assuming the opponent will repeat thier last
-action and best responding to that.
-
-Strategies based on such iterative reasoning can explain non-equilibrium
-play in a range of games (Camerer 2003), such as the \(p\)-beauty
-contest game (Nagel 1995), dominance solvable games (Camerer, Ho, and
-Chong 2004), and various standard normal form games (Costa-Gomes,
-Crawford, and Broseta 2001). They also underlies successful models in
-behavioural economics, such as Level-\(k\) and Cognitive Hierarchy
-models (Camerer, Ho, and Chong 2004), which posit that people assume
-their opponent applies a limited level of iterative reasoning, taking
-actions that are best responses to those of their (modelled) opponent.
-In Level-\(k\) theory, a level-0 player uses a fixed strategy without
-explicitly considering the strategy of their opponent. A level-1 player
-assumes their opponent is a level-0 player, and chooses actions to best
-respond to the strategy of their opponent, without considering what
-their opponent might believe that they will play. A level-2 player, on
-the other hand, takes their opponent's belief about their actions into
+Strategies based on iterative reasoning can explain non-equilibrium play
+in a range of games (Camerer 2003), such as the \(p\)-beauty contest
+game (Nagel 1995), dominance solvable games (Camerer, Ho, and Chong
+2004), and various standard normal form games (Costa-Gomes, Crawford,
+and Broseta 2001). They also underlies successful models in behavioural
+economics, such as Level-\(k\) and Cognitive Hierarchy models (Camerer,
+Ho, and Chong 2004), which posit that people assume their opponent
+applies a limited level of iterative reasoning, taking actions that are
+best responses to those of their (modelled) opponent. In Level-\(k\)
+theory, a level-0 player uses a fixed strategy without explicitly
+considering the strategy of their opponent. A level-1 player assumes
+their opponent is a level-0 player, and chooses actions to best respond
+to the strategy of their opponent, without considering what their
+opponent might believe that they will play. A level-2 player, on the
+other hand, takes their opponent's belief about their actions into
 account, assuming they face a level-1 player, and choosing actions to
 best respond to the actions of that player. Cognitive Hierarchy theory
 is based on similar principles, but rather than assuming an opponent
@@ -234,92 +254,102 @@ adopt each of the level-\(k\) strategies with a particular probability
 (i.e., the opponent's strategy is a mixture over pure level-\(k\)
 strategies).
 
-While there are similarities between outcome and cycle based strategies
-and an opponent adopting a level-k iterated reasoning, the
-aforementioned studies did not specifically frame the player's
-strategies in terms of iterative reasoning. Batzilis et al. (2019)
-collected data on a million RPS games from a popular online app and
-found that players strategically used the information on their
-opponents' previous play. While a majority of play (74\%) is akin to a
-level-0 strategy, a significant proportion of play is consistent with
-either a level-1 (19\%) or level-2 strategy (7\%). To what extent people
-exploit an opponent who consistently uses a level-k strategy remains
-unclear.
+Batzilis et al. (2019) analyzed data from a million online RPS games and
+found that players strategically used information on their opponents'
+previous play. While the majority of play (74\%) is consistent with a
+level-0 strategy, a significant proportion is consistent with either a
+level-1 (19\%) or level-2 strategy (7\%). As noted above, iterative
+reasoning results in specific action contingencies which correspond to
+particular action, outcome, and cycle based strategies. Prior research
+analysing behaviour in terms of these latter strategies has not
+explicitly related these to levels of iterative reasoning. That
+particular patterns are observed more frequently, and are exploited more
+readily (Brockbank and Vul 2021), may be due to people adopting specific
+forms of iterative reasoning. For example, using a sequential move game,
+Hedden and Zhang (2002) found that people initially adopt a level-1
+strategy, thus assuming their opponent to adopt a level-0 strategy, but
+can learn over time to adopt a level-2 strategy if their opponent
+consistently uses a level-1 strategy. In a different version of this
+sequential move game, Goodie, Doshi, and Young (2012) found that
+participants initially adopt a level-2 strategy, but over time can learn
+to adopt a level-1 strategy if the opponent consistently uses a level-0
+strategy. To what extent these results generalise to simultaneous move
+games such as RPS is unclear. Zhang, Moisan, and Gonzalez (2021) found
+that people can learn to beat computer opponents adopting a win-stay
+lose-change or win-change lose-stay strategy, which are both level-0
+strategies.
 
-There are three main ways in which you can learn to exploit a level-k
-opponent. One way is to explicitly learn the depth of their iterative
-reasoning, such as that the opponent's actions are based on a level-2
-strategy. The second way is to learn the contingencies between previous
-round play and an opponent's next action (e.g., that your opponent is
-likely to play Scissors if your previous action was Paper). Rather than
-learning to predict an opponent's next actions, and then deciding upon
-the best counter-move, a third strategy is to directly learn rewarding
-actions. Unlike learning contingencies between actions or which current
-action would be most rewarding, learning the depth of iterative
-reasoning allows for generalisation to other games with other actions.
-This can then provide an early advantage, allowing one to exploit the
-opponent's strategy before you have played long enough to reliably
-establish contingencies within a game. In what we call the Bayesian
-Cognitive Hierarchy model, we propose that people use Bayesian inference
-to determine the depth of iterative reasoning of their opponent, and use
-this to predict their opponent's actions and determine the best response
-to this. We contrast this to a Reinforcement Learning model which learns
-which actions are most rewarding given previous round play, by learning
-state-action values (the expected reward from taking an action in a
-given state). The Experience Weighted Attraction (EWA) model (Ho,
-Camerer, and Chong 2004), popular in behavioral game theory, includes an
-additional mechanism to learn about the consequences of actions that
-were not actually taken.
+There are three main ways in which you can learn to exploit a
+level-\(k\) opponent. One way is to explicitly learn the depth of their
+iterative reasoning, such as that the opponent's actions are based on a
+level-2 strategy. The second way is to learn the contingencies between
+previous round play and an opponent's next action (e.g., that your
+opponent is likely to play Scissors if your previous action was Paper).
+Rather than learning to predict an opponent's next actions, and then
+deciding upon the best counter-move, a third strategy is to directly
+learn rewarding actions. Unlike learning contingencies between actions,
+or which current action is most rewarding, learning the depth of
+iterative reasoning allows for generalisation to other games with
+different actions. This can then provide an early advantage, allowing
+one to exploit the opponent's strategy before you have played long
+enough to reliably establish contingencies within a game. In what we
+call the Bayesian Cognitive Hierarchy model, we propose that people use
+Bayesian inference to determine the depth of iterative reasoning of
+their opponent, and use this to predict their opponent's actions and
+determine the best response to this. We contrast this to a Reinforcement
+Learning model, which learns which actions are most rewarding given
+previous round play, by learning state-action values (the expected
+reward from taking an action in a given state). The Experience Weighted
+Attraction (EWA) model (Ho, Camerer, and Chong 2004), popular in
+behavioral game theory, includes an additional mechanism to learn about
+the consequences of actions that were not actually taken.
 
-As both RL and EWA models learn values for actions in states, they don't
-allow for generalization to new games with different actions, as there
-is no immediate way in which to map a set of actions in one game to a
-set of actions in another. For example, consider the game of
-Fire-Water-Grass (FWG), where water beats fire, grass beats water, and
-fire beats grass. This game is structurally the same as RPS. However, if
-you have learned in RPS that playing Rock after a previous play of
-Paper, there is no direct way to immediately transfer this to knowing
-that Fire is a rewarding move after previously having played Water.
-Learning about the new FWG actions requires experience with the FWG
-game. This is in contrast to learning the level of iterative reasoning
-of the opponent. If you know they expect you to repeat your previous
-action and choose their action to beat this, then you can infer that
-they will play Grass after your previous choice of Water, even if you
-have never played FWG before.
-
-Iterative reasoning is likely to be more cognitively demanding than
-learning action contingencies. Whilst iterative reasoning allows
-transfer between games, once enough experience has been gained within a
-game, it may no longer provide an advantage over simpler reinforcement
-learning. Therefore, it might be more efficient to use an RL strategy in
-the later stages of a game. With the use of a hidden Markov model, we
-allow participants to switch between strategies during the games.
+As both RL and EWA models learn values for actions in states (here, we
+define the state as the previous play), they don't allow for
+generalization to new games with different actions, as there is no
+immediate way in which to map a set of actions in one game to a set of
+actions in another. For example, consider the game of Fire-Water-Grass
+(FWG), where water beats fire, grass beats water, and fire beats grass.
+This game is structurally the same as RPS. However, if you have learned
+in RPS to play Rock after a previous play of Paper, there is no direct
+way to transfer this to knowing that Fire is a rewarding move after
+previously having played Water. Learning about the new actions in FWG
+requires experience with the FWG game. This is in contrast to learning
+the level of iterative reasoning of the opponent. If you know they
+expect you to repeat your previous action and choose their action to
+beat this, then you can infer that they will play Grass after your
+previous choice of Water, even if you have never played FWG before.
+Whilst providing a way to transfer knowledge about an opponent to new
+games, iterative reasoning is likely to be more cognitively demanding
+than learning action contingencies. Once sufficient experience has been
+gained within a game, iterative reasoning may no longer provide an
+advantage over simpler reinforcement learning. Therefore, it might be
+more efficient to use an RL strategy in the later stages of a game. In
+our modelling, we will allow for such switching between strategies
+during games.
 
 In the present study, we let humans repeatedly face computer agents
 endowed with a limited ability for iterative reasoning based on
-previous-round play. The use of computer opponents allows precise
-experimental control over the strategy used, and whether aspects such as
-the depth of reasoning can be transferred to new games. We aim to assess
-whether (1) human players adapt their strategy to exploit this limited
-reasoning of their opponent, and (2) whether they are able to generalize
-a learned opponent model to other games. In two experiments,
-participants repeatedly face the same opponent (Experiment 1) or two
-different opponents (Experiment 2) in three consecutive games: the
-well-known Rock-Paper-Scissors game, the structurally similar
-Fire-Water-Grass game, and a less similar Numbers (Experiment 1) or
-Shootout (Experiment 2) game.
-
-To foreshadow our results, we find evidence that participants transfer
-the learned strategy of their opponent to new games, providing them with
-an early advantage before gaining enough experience within a game to
-enable learning contingencies between previous and winning actions. This
-transfer is moderated by the sophistication of their opponent and the
-similarity between the games. Computational modelling shows that
-participants, when first encountering an opponent in a game, employ
-Bayesian inference about the level of iterative reasoning of their
-opponent to predict their actions and determine the best response. In
-later rounds of the games, they switch to a cognitively less demanding
-reinforcement learning strategy.
+previous-round play. As in previous studies discussed above, we use
+computer opponents to enable precise experimental control over the
+strategies used and the transfer of depth of iterative reasoning between
+games. We aim to assess whether (1) human players adapt their strategy
+to exploit this limited reasoning of their opponent, and (2) whether
+they are able to generalize a learned opponent model to other games. In
+two experiments, participants repeatedly face the same opponent
+(Experiment 1) or two different opponents (Experiment 2) in three
+consecutive games: the well-known Rock-Paper-Scissors game, the
+structurally similar Fire-Water-Grass game, and a less similar Numbers
+(Experiment 1) or Shootout (Experiment 2) game. To foreshadow our
+results, we find evidence that participants transfer the learned
+strategy of their opponent to new games, providing them with an early
+advantage before gaining enough experience within a game to enable
+learning contingencies between previous and winning actions.
+Computational modelling shows that participants, when first encountering
+an opponent in a new game, employ Bayesian inference about the level of
+iterative reasoning of their opponent to predict their actions and
+determine the best response. However, in later rounds of the games, they
+switch to a cognitively less demanding reinforcement learning strategy.
 
 \hypertarget{experiment-1}{%
 \section{Experiment 1}\label{experiment-1}}
@@ -342,7 +372,7 @@ A total of 52 (28 female, 24 male) participants were recruited on the
 Prolific Academic platform. The mean age of participants was 31.2 years.
 Participants were paid a fixed fee of £2.5 plus a bonus dependent on
 their performance (£1.06 on average). The experiment had a 2 (computer
-opponent: level 1 or level 2) by 3 (games: rock-paper-scissors,
+opponent: level-1 or level-2) by 3 (games: rock-paper-scissors,
 fire-water-grass, numbers) design, with repeated measures on the second
 factor. Participants were randomly assigned to one of the two levels of
 the first factor.
@@ -350,30 +380,28 @@ the first factor.
 \hypertarget{tasks}{%
 \subsubsection{Tasks}\label{tasks}}
 
-Participants played the three games against their computer opponent.
-These games were Rock-Paper-Scissors, Fire-Water-Grass, and the Numbers
-game. A typical Rock-Paper-Scissors game (hereafter RPS) is a 3x3
-zero-sum game, with a cyclical hierarchy between the two player's
-actions: rock blunts scissors, paper wraps rock, and scissors cut paper.
-If one player chooses an action which dominates their opponent's action,
-the player wins (receives a reward of 1) and the other player loses
-(receives a reward of -1). Otherwise it is a draw and both players
-receive a reward of 0. RPS has a unique mixed-strategy Nash equilibrium,
-which consists of each player in each round randomly selecting from the
-three options with uniform probability.
+Participants played three games against their computer opponent:
+Rock-Paper-Scissors (RPS), Fire-Water-Grass (FWG), and the Numbers game.
+RPS is a 3x3 zero-sum game, with a cyclical hierarchy between the two
+player's actions: Rock blunts Scissors, Paper wraps Rock, and Scissors
+cut Paper. If one player chooses an action which dominates their
+opponent's action, the player wins (receives a reward of 1) and the
+other player loses (receives a reward of -1). Otherwise it is a draw and
+both players receive a reward of 0. RPS has a unique mixed-strategy Nash
+equilibrium, which consists of each player in each round randomly
+selecting from the three options with uniform probability.
 
-The Fire-Water-Grass (FWG) game is identical to RPS in all but action
-labels: Fire burns grass, water extinguishes fire, and grass absorbs
-water. We use this game as we are interested in whether learning is
-transferred in a fundamentally similar game where the only difference is
-in the label of the possible actions. This should make it relatively
-easy to generalize knowledge of the opponent's strategy, provided this
-knowledge is on a sufficiently abstract level, such as knowing the
-opponent is a level-1 or level-2 player. Crucially, learning simple
-contingencies such as ``If I played rock on the previous round, playing
-scissors next will likely result in a win'', is not generalizable to
-this similar game, as these contingencies are tied to the labels of the
-actions.
+The FWG game is identical to RPS in all but action labels: Fire burns
+Grass, Water extinguishes Fire, and Grass absorbs Water. We use this
+game as we are interested in whether learning is transferred to a
+fundamentally similar game, where the only difference is in the label of
+the possible actions. This should make it relatively easy to generalize
+knowledge of the opponent's strategy, provided this knowledge is on a
+sufficiently abstract level, such as knowing the opponent is a level-1
+or level-2 player. Crucially, learning simple contingencies such as ``If
+I played Rock on the previous round, playing Scissors next will likely
+result in a win,'' is not generalizable to this similar game, as these
+contingencies are tied to the labels of the actions.
 
 The Numbers game is a generalization of RPS. In the variant we use, 2
 participants concurrently pick a number between 1 and 5. To win in this
@@ -386,34 +414,36 @@ thinks the opponent will play 5, then the winning choice is to pick 1.
 This game has a structure similar to RPS in which every action is
 dominated by exactly one other action. All other possible combinations
 of choices are considered ties. Similar to RPS and FWG, the
-mixed-strategy Nash equilibrium is to randomly play each action with
+mixed-strategy Nash equilibrium is to randomly choose each action with
 equal probability.
 
 The computer opponent was programmed to use either a level-1 or level-2
 strategy in all the games. A level-1 player is defined as a player who
-best responds to a level-0 player. A level-0 player plays in a
-non-strategic way and does not consider their opponent's actions. Here,
-we assume a level-0 player simply repeats their previous action. There
-are other ways to define a level-0 player. For instance, as repeating
-their action if it resulted in a win and choosing randomly from the
-remaining actions otherwise, or choosing randomly from all actions. As a
-best response to a uniformly random action is itself a random action,
-defining a level-0 player in such a way would make a level-1 opponent's
-strategy much harder to discern. Because we are mainly interested in
-generalization of knowledge of an opponent's strategy to other games,
-which requires good knowledge of this strategy, we opted for this more
-deterministic formulation of a level-0 player. The level-2 computer
-opponent assumes in turn that the participant is a level-1 opponent,
-playing according to the strategy just described. To make the computer
-opponent's strategy not too obvious, we introduced some randomness in
-actions of computer opponent, making them play randomly in 10\% of all
-trials. Note that at all levels, the strategies are contingent on the
-actions taken in the previous round. The choice of this type of strategy
-is consistent with evidence that humans strategically use information
-from last round play of their opponents in zero-sum games (Batzilis et
-al. 2019; Wang, Xu, and Zhou 2014). Table \ref{tab:table-actions} shows
-an example of the computer opponent's actions in response to the
-previous round play.
+best responds to a level-0 player. A level-0 player does not consider
+their opponent's beliefs. Here, we assume a level-0 player simply
+repeats their previous action. There are other ways to define a level-0
+player. For instance, as repeating their action if it resulted in a win
+and choosing randomly from the remaining actions otherwise, or choosing
+randomly from all actions. As a best response to a uniformly random
+action is itself a random action, defining a level-0 player in such a
+way would make a level-1 opponent's strategy much harder to discern.
+Because we are mainly interested in generalization of knowledge of an
+opponent's strategy to other games, which requires good knowledge of
+this strategy, we opted for this more deterministic formulation of a
+level-0 player. Repeating previous actions is also in line with findings
+of Eyler et al. (2009). So the level-1 computer agent expects their
+(human) opponent to repeat their previous action, and chooses the action
+that would beat this. The level-2 computer opponent assumes in turn that
+the participant is a level-1 opponent, playing according to the strategy
+just described. To make the computer opponent's strategy not too
+obvious, we introduced some randomness in their actions, making them
+play randomly in 10\% of all trials. Note that at all levels, the
+strategies are contingent on the actions taken in the previous round.
+The choice of this type of strategy is consistent with evidence that
+humans strategically use information from last round play of their
+opponents in zero-sum games (Batzilis et al. 2019; Wang, Xu, and Zhou
+2014). Table \ref{tab:table-actions} shows an example of the computer
+opponent's actions in response to the previous round play.
 
 \begin{table}
 
@@ -481,27 +511,38 @@ thanked for their participation.
 
 Participants' scores in each half of each game are depicted in Figure
 \ref{fig:exp1-avg-scores-game}. Overall, scores in each game were
-significantly different from 0, the expected score of uniformly random
-play (RPS: \(t(51) = 7.26\), \(p < .001\); FWG: \(t(51) = 10.04\) ,
-\(p < .001\); Numbers: \(t(51) = 7.17\), \(p < .001\)). As uniformly
+significantly higher than 0, the expected score of uniformly random play
+(RPS: \(M = 0.29\), 95\% CI \([0.21\), \(0.37]\), \(t(51) = 7.26\),
+\(p < .001\); FWG: \(M = 0.45\), 95\% CI \([0.36\), \(0.54]\),
+\(t(51) = 10.05\), \(p < .001\); Numbers: \(M = 0.31\), 95\% CI
+\([0.22\), \(0.40]\), \(t(51) = 7.18\), \(p < .001\)). As uniformly
 random play is the Nash equilibrium, this indicates successful deviation
-from a Nash-optimal strategy.
+from a Nash-optimal strategy. Additional analysis (see Supplementary
+Information) indicates better performance against the level-1 compared
+to level-2 opponent. This indicates that participants may have found it
+more difficult to predict the actions of the more sophisticated level-2
+opponent, even though both types of opponent are equally consistent and
+hence equally exploitable in principle.
 
-As a measure for learning transfer, we focus on participants' scores in
-the initial 5 rounds after the first round (rounds 2-6) of each game
-(see Figure \ref{fig:exp1-early-score-by-opp}). We exclude the very
-first round as the computer opponent played randomly here and there is
-no opportunity yet for the human player to exploit their opponent's
-strategy. Players with no knowledge of their opponent's strategy would
-be expected to perform at chance level in these early rounds, whilst
-positive scores in rounds 2-6 are consistent with generalization of
-prior experience. The early score score in both FWG and Numbers is
-significantly higher than 0 (FWG: \(t(51) = 4.13\), \(p < .001\);
-Numbers: \(t(51) = 3.48\), \(p = .001\)). We did not expect positive
-early scores for the RPS game, as it was the first game played and there
-was no opportunity for learning about the opponent's strategy. Scores in
-this game were indeed not significantly different from 0
-(\(t(51) = 1.08\), \(p = .29\)).
+For an initial assessment of learning transfer, we focus on
+participants' scores in the initial 5 rounds after the first round
+(rounds 2-6) of each game (see Figure
+\ref{fig:exp1-early-score-by-opp}). We exclude the first round as the
+computer opponent played randomly here and there is no opportunity yet
+for the human player to exploit their opponent's strategy. Players with
+no knowledge of their opponent's strategy would be expected to perform
+at chance level in these early rounds, whilst positive scores in rounds
+2-6 are consistent with generalization of prior experience. The early
+round score in both FWG and Numbers is significantly higher than 0 (FWG:
+\(M = 0.24\), 95\% CI \([0.12\), \(0.36]\), \(t(51) = 4.13\),
+\(p < .001\); Numbers: \(M = 0.15\), 95\% CI \([0.07\), \(0.24]\),
+\(t(51) = 3.48\), \(p = .001\)). We did not expect positive early scores
+for the RPS game, as it was the first game played and there was no
+opportunity for learning about the opponent's strategy. Scores in this
+game were indeed not significantly different from 0 (\(M = 0.06\), 95\%
+CI \([-0.05\), \(0.18]\), \(t(51) = 1.08\), \(p = .285\)). Additional
+analysis (see Supplementary Information) provided no evidence that
+learning transfer differed between the two types of opponent.
 
 \begin{figure}
 
@@ -511,19 +552,6 @@ this game were indeed not significantly different from 0
 
 \caption{\label{ref:figure4-caption}Performance in early rounds (2-6) per game and block across conditions in Experiment 1. Points are scores of individual participants and boxes reflect the 95\% confidence intervals of the mean (center line equals the mean).}\label{fig:exp1-early-score-by-opp}
 \end{figure}
-
-Next, we explore whether learning transfer is moderated by the type of
-opponent and game similarity. We expected better transfer between more
-similar games (i.e.~better transfer from RPS to FWG than from RPS/FWG to
-Numbers), and worse transfer for the more sophisticated level-2 agent.
-Figure \ref{fig:exp1-early-score-by-opp} indicates that the pattern over
-the games is indeed dissimilar between level-1 and level-2 opponents. We
-estimated a linear mixed-effects model with the early round score as the
-dependent variable, and Opponent (Level 1 or Level 2) and Game (RPS,
-FWG, Numbers), as well as their interaction, as independent variables.
-In addition to these fixed effects, the model included random intercepts
-for participants. The results showed only a significant main effect of
-Game (\(F(2,100) = 3.35\), \(p = .04\)).
 
 \hypertarget{experiment-2}{%
 \section{Experiment 2}\label{experiment-2}}
@@ -579,7 +607,7 @@ round. There is no possibility of ties in this game. Figure
 game. What makes this game different to the other games is that there
 are now two ways to beat the opponent: if the shooter thinks their
 opponent is going to choose to defend ``right'' in the next round, they
-can win by either choosing to shoot ``left'' or ``center''. A level-1
+can win by either choosing to shoot ``left'' or ``center.'' A level-1
 shooter who thinks that their goalkeeper opponent will repeat their last
 action has thus two possible best responses. A level-1 goalkeeper,
 however, has only a single best response (defending where their opponent
@@ -644,11 +672,17 @@ Participants' scores are depicted in Figure
   expected score of random play in the Shootout game is 1/3, whilst it
   is 0 in the RPS and FWG game. To make the scores comparable, we
   therefore subtracted 1/3 from the Shootout scores.} Average (adjusted)
-scores differed from 0 in all three games (RPS: \(t(49) = 6.26\),
-\(p < .001\); FWG: \(t(49) = 7.25\), \(p < .001\); Shootout:
-\(t(49) = 13.61\), \(p < .001\)). As in Experiment 1, this indicates
-that participants successfully deviated from random (Nash-optimal)
-strategies.
+scores differed from 0 in all three games (RPS: \(M = 0.20\), 95\% CI
+\([0.14\), \(0.27]\), \(t(49) = 6.26\), \(p < .001\); FWG: \(M = 0.28\),
+95\% CI \([0.20\), \(0.36]\), \(t(49) = 7.25\), \(p < .001\); Shootout:
+\(M = 0.35\), 95\% CI \([0.30\), \(0.41]\), \(t(49) = 13.62\),
+\(p < .001\)). As in Experiment 1, this indicates that participants
+successfully deviated from Nash-optimal (random) strategies. In contrast
+to Experiment 1, additional analysis (see Supplementary Information)
+showed no overall difference in performance between the two types of
+opponent. However, participants performed better against the level-2
+than level-1 opponent in RPG, but better against the level-1 opponent in
+Shootout.
 
 \begin{figure}
 
@@ -659,35 +693,31 @@ strategies.
 \caption{\label{fig:exp2-score-by-opp}Performance per game and interaction across opponents in Experiment 2. Points are scores of individual participants and boxes reflect the 95\% confidence intervals of the mean (center line equals the mean).}\label{fig:exp2-score-by-opp}
 \end{figure}
 
-To measure transfer between games, we again focus on participants'
-scores in the initial 5 rounds after the first round (rounds 2-6) of
-each game and only during the first time they interact with an opponent
-in a game (see Figure \ref{fig:exp2-early-score-by-opp}). Early-round
-scores differed significantly from 0 for the both the FWG
-\textbf{(level-1 opponent: \(t(49) = 4.60\), \(p < .001\), level-2
-opponent: \(t(49) = 4.20\), \(p < .001\)) and Shootout games (level-1
-opponent: \(t(49) = 6.80\), \(p < .001\), level-2 opponent:
-\(t(49) = 4.11\), \(p < .001\))}. This is consistent with transfer of
-opponent models between games. \textbf{Early scores in the RPS game
-were, as expected, not significantly different from 0 for those facing
-level-1 opponents. However, for those facing level-2 opponents, the
-early scores were significantly different from 0 (\(t(49) = 2.57\),
-\(p = .01\)). This was unexpected.}
-
-We next estimated a linear mixed-effects model with the early round
-scores as the dependent variable, and Block (1, 2), Opponent type
-(level-1 or level-2) and Game (RPS, FWG, Shootout) as independent
-variables, including all main effects and interactions. In addition to
-these fixed effects, the model also included random intercepts for
-participants. We found a main effect of Game (\(F(2,240) = 6.57\),
-\(p = .002\)), and an interaction between Game and Opponent type
-(\(F(2,240) = 3.34\), \(p = .037\)). The latter effect is due to
-early-score increasing from FWG to Shootout for level-1 opponents, but
-decreasing for level-2 opponents. We found no effect of Block. This is
-important, as if early-round scores are due to general practice effects,
-rather than transfer of an opponent model, we would expect early-round
-scores to increase between block 1 (first encounter of one opponent) and
-2 (first encounter of other opponent) within a game.
+As an initial assessment of transfer between games, we again focus on
+participants' scores in rounds 2-6 of each game, both for stage 1 and 2
+when participants first interact with an opponent in a game (see Figure
+\ref{fig:exp2-early-score-by-opp}). We analyse these early-round scores
+separately for each stage, as early-round scores in the second stage
+could have benefited from experience in stage 1. Early-round scores
+differed significantly from 0 for the both the FWG (stage 1:
+\(M = 0.36\), 95\% CI \([0.24\), \(0.49]\), \(t(49) = 5.77\),
+\(p < .001\); stage 2: \(M = 0.19\), 95\% CI \([0.07\), \(0.31]\),
+\(t(49) = 3.15\), \(p = .003\)) and Shootout (stage 1: \(M = 0.30\),
+95\% CI \([0.20\), \(0.40]\), \(t(49) = 5.90\), \(p < .001\); stage 2:
+\(M = 0.28\), 95\% CI \([0.17\), \(0.40]\), \(t(49) = 4.98\),
+\(p < .001\)). As expected, early scores in stage 1 of RPS did not
+differ significantly from 0, \(M = 0.07\), 95\% CI \([-0.05\),
+\(0.19]\), \(t(49) = 1.16\), \(p = .252\). In stage 2, however, they
+did, \(M = 0.14\), 95\% CI \([0.02\), \(0.26]\), \(t(49) = 2.28\),
+\(p = .027\). This indicates that the experience with the other opponent
+in stage 1 may have provided an advantage to playing against a different
+opponent in stage 2. Additional analysis (see Supplementary Information)
+indicates transfer to the Shootout game may have been easier for the
+level-1 than level-2 opponent. No reliable effect of stage was found.
+The latter is important, because if early-round scores are due to
+general practice effects rather then transfer of an opponent model, we
+would expect early-round scores to increase between stage 1 and 2 in a
+game.
 
 \begin{figure}
 
@@ -698,32 +728,28 @@ scores to increase between block 1 (first encounter of one opponent) and
 \caption{\label{ref:figure4-caption}Performance in early rounds (2-6) per game and opponent in Experiment 2. Points are scores of individual participants and boxes reflect the 95\% confidence intervals of the mean (center line equals the mean).}\label{fig:exp2-early-score-by-opp}
 \end{figure}
 
-\hypertarget{discussion}{%
-\subsection{Discussion}\label{discussion}}
-
-The results of Experiment 2 confirm earlier findings from Experiment 1
-on learning transfer in a situation where participants need to learn
-about two distinct opponents. As in Experiment 1, participants adapted
-their strategies to both level-1 and level-2 opponents to exploit
-deviations from Nash-optimal play. Knowledge about both types of
-opponents were transferred to both the similar and dissimilar game. This
-transfer was moderated by the degree of similarity between games, as
-well as opponent type. The interaction effect showed that transfer to
-the dissimilar game was easier when facing the less sophisticated agent.
-
 \hypertarget{computational-modelling}{%
 \section{Computational modelling}\label{computational-modelling}}
 
-To gain more insight into participants' strategies against their
-computer opponents, we constructed and tested several computational
-models of strategy learning. The baseline model assumes play is random,
-and each potential action is chosen with equal probability. Note that
-this corresponds to the Nash equilibrium strategy. The other models
-adapted their play to the opponent, either by reinforcing successful
-actions in each game (reinforcement learning), or by determining the
-type of opponent through Bayesian learning (Bayesian Cognitive Hierarchy
-models). We also include the (self-tuning) Expected Weighted Attraction
-(EWA) model, which is a popular model in behavioural economics.
+The results of Experiment 2 confirm findings from Experiment 1 on
+learning transfer in a situation where participants need to learn about
+two distinct opponents. In both Experiment 1 and 2, participants adapted
+their strategies to level-1 and level-2 opponents to exploit deviations
+from Nash-optimal play. Moreover, from early-round performance, we found
+initial evidence that knowledge about both types of opponents was
+transferred to similar (FWG) and dissimilar (Numbers or Shootout) games.
+
+To gain more insight into how participants adapted their strategies to
+their computer opponents, we constructed and tested several
+computational models of strategy learning. The baseline model assumes
+play is random, and each potential action is chosen with equal
+probability. Note that this corresponds to the Nash equilibrium
+strategy. The other models adapted their play to the opponent, either by
+reinforcing successful actions in each game (reinforcement learning), or
+by determining the type of opponent through Bayesian learning (Bayesian
+Cognitive Hierarchy models). We also include the (self-tuning) Expected
+Weighted Attraction (EWA) model, which is a popular model in behavioural
+economics.
 
 In the following, we will describe the models in more detail, and
 provide some intuition into how they implement learning about the game
@@ -733,7 +759,7 @@ game
 on each trial \(t\), the participant chooses an action
 \(a_t \in \mathcal{A}_g\), and the opponent chooses action
 \(o_t \in \mathcal{A}_g\), where \(\mathcal{A}_g\) is the set of allowed
-actions in game \(g\), e.g. \(\mathcal{A}_\text{RPS} = \{R,P,S\}\). The
+actions in game \(g\), e.g.~\(\mathcal{A}_\text{RPS} = \{R,P,S\}\). The
 participant then receives reward \(r_t \in \{1,0,-1\}\), and the
 opponent receives \(-r_t\). We use the state variable
 \(s_t = \{a_{t-1},o_{t-1}\}\) to denote the actions taken in the
@@ -759,18 +785,20 @@ where \(Q(s_{t},a_{t})\) is the value of taking action \(a\) when in
 state \(s\) at time \(t\), and \(\alpha \in [0,1]\) the learning rate.
 For instance, \(Q_t(\{R,S\},P)\) denotes the value of taking action
 ``Paper'' this round if the player's last action was ``Rock'' and the
-opponent played ``Scissors''. Actions are taken according to a softmax
-rule:
-\[P_{t}(a|s_t) = \frac{\exp \{ \lambda Q_{t}(a,s_t) \}}{\sum_{a' \in \mathcal{A}_g} \exp \{\lambda  Q_{t}(a',s_t) \}}, \]
-where the inverse temperature parameter \(\lambda\) determines the
-consistency of the strategy (the higher \(\lambda\), the more often the
-action with the highest \(Q\)-value is chosen). While this RL model
-allows the players to compute the values of actions conditional on past
-play, crucially, it will not be able to transfer learning between games,
-as each game has a different state space \(\mathcal{S}_g\) and action
-space \(\mathcal{A}_g\), and there is no simple way to map states and
-actions across games. The RL model has two free parameters: the learning
-rate (\(\alpha\)) and the inverse temperature (\(\lambda\)).
+opponent played ``Scissors.'' Actions are taken according to a softmax
+rule: \begin{equation}
+\label{eq:softmax}
+P_{t}(a|s_t) = \frac{\exp \{ \lambda Q_{t}(a,s_t) \}}{\sum_{a' \in \mathcal{A}_g} \exp \{\lambda  Q_{t}(a',s_t) \}}, 
+\end{equation} where the inverse temperature parameter \(\lambda\)
+determines the consistency of the strategy (the higher \(\lambda\), the
+more often the action with the highest \(Q\)-value is chosen). While
+this RL model allows the players to compute the values of actions
+conditional on past play, crucially, it will not be able to transfer
+learning between games, as each game has a different state space
+\(\mathcal{S}_g\) and action space \(\mathcal{A}_g\), and there is no
+simple way to map states and actions across games. The RL model has two
+free parameters: the learning rate (\(\alpha\)) and the inverse
+temperature (\(\lambda\)).
 
 \hypertarget{experience-weighted-attraction-ewa-model}{%
 \subsection{Experience-weighted attraction (EWA)
@@ -779,12 +807,11 @@ model}\label{experience-weighted-attraction-ewa-model}}
 As discussed in the introductory section on computational models, the
 self-tuning Experience Weighted Attraction (EWA) model combines two
 seemingly different approaches, namely reinforcement learning and belief
-learning. The EWA model is based on updating ``Attractions'' for each
+learning. The EWA model is based on updating ``Attractions'\,' for each
 action over time given a particular state. The attraction of action
 \(a\) at time \(t\) given state \(s\) is denoted as \(Q_{t}(a, s)\) and
 updated as
-\[ Q_{t+1}(a,s) =  \frac{\phi(t) \ N(t) \ Q_{t}(a,s) + [ \delta_{a}(t) + (1-\delta_{a}(t)) \ I(a_t = a )] \ R(a,o_t) } {\phi(t)N(t) + 1} \]
-
+\[ Q_{t+1}(a,s) =  \frac{\phi(t) \ N(t) \ Q_{t}(a,s) + [ \delta_{a}(t) + (1-\delta_{a}(t)) \ I(a_t = a )] \ R(a,o_t) } {\phi(t)N(t) + 1} ,\]
 where \(I(x)\) is an indicator function which takes the value 1 if its
 argument is true and 0 otherwise, and \(R(a,o_t)\) is the reward that
 would be obtained from playing action \(a\) against opponent action
@@ -822,16 +849,12 @@ well as an indicator vector of the most recent opponent play:
 defined above. To get the surprise index, we simply sum all the squared
 deviations between the cumulative history vector \(h^{k}(t)\) and the
 immediate history \(r^k(t)\):
-
-\[S_{p}(t) = \sum_{k=1}^{|\mathcal{A}_g|} (h^{k}(t) - r^k(t))^2 \]
-
-For more details on the self-tuning EWA model, we refer the reader to
-(Ho, Camerer, and Chong 2004). As in the RL model above, actions are
-chosen based on a softmax decision rule:
-
-\[P_t(a,s) = \frac{\exp \{\lambda  Q_{t}(a,s) \} }{\sum_{a' \in \mathcal{A}_t} \exp \{ \lambda Q_{t}(a',s) \} } \]
-The self-tuning EWA has one free parameter: the inverse temperature of
-the softmax decision rule (\(\lambda\)).
+\[S_{p}(t) = \sum_{k=1}^{|\mathcal{A}_g|} (h^{k}(t) - r^k(t))^2 \] For
+more details on the self-tuning EWA model, we refer the reader to (Ho,
+Camerer, and Chong 2004). As in the RL model above, actions are chosen
+based on a softmax decision rule (Equation \ref{eq:softmax}). The
+self-tuning EWA has one free parameter: the inverse temperature of the
+softmax decision rule (\(\lambda\)).
 
 \hypertarget{bayesian-cognitive-hierarchy-bch-model}{%
 \subsection{Bayesian Cognitive Hierarchy (BCH)
@@ -844,20 +867,24 @@ consider the opponent could be either a level 0, level 1, or level 2
 player, and start with a prior belief that each of these types is
 equally likely. They then use observations of the opponent's actions to
 infer a posterior probability of each type:
-\[P(\text{level}=k | \mathcal{D}_{t})  \propto  P(\mathcal{D}_{t}|\text{level}=k ) \times P(\text{level}=k)\]
+\[P(\text{level}=k | \mathcal{D}_{t})  \propto  P(\mathcal{D}_{t}|\text{level}=k ) \times P(\text{level}=k) ,\]
 where \(\mathcal{D}_{t} = \{s_1,\ldots,s_t\}\) is the data available at
 time \(t\). The likelihood is defined as
-\[P(\mathcal{D}_{t}|\text{level}=k) = \prod_{j=1}^t \left( \theta \frac{1}{|\mathcal{A}_g|} + (1-\theta) f_k(o_j|s_{j})\right)\]
+\[P(\mathcal{D}_{t}|\text{level}=k) = \prod_{j=1}^t \left( \theta \frac{1}{|\mathcal{A}_g|} + (1-\theta) f_k(o_j|s_{j})\right) ,\]
 where \(f_k(o_t|s_{t}) = 1\) if \(o_t\) is the action taken by a level
 \(k\) player when the previous round play was
 \(s_t = (a_{t-1}, o_{t-1})\), and 0 otherwise. Note that the likelihood
 assumes (correctly) that there is a probability \(\theta \in [0,1]\)
 that the opponent takes a random action. The posterior at time \(t-1\)
-forms the prior at time \(t\). We assume a participant chooses an action
-by using the softmax function over the best response to predicted
-actions:
-\[\begin{aligned} B_t(a) &= \sum_{k = 0}^2 \sum_{o \in \mathcal{A}_g} b(a,o) f_k(o|s_{t})  P(\text{level}=k|\mathcal{D}_{t-1})\\
-P_t(a) &= \frac{\exp\{\lambda B_t(a) \}}{\sum_{a' \in \mathcal{A}_g} \exp \{ \lambda B_t(a')\}} \end{aligned}\]
+forms the prior at time \(t\). The probability that an action \(a\) is
+the best response on trial \(t\) is defined as:
+\[B_t(a) = \sum_{k = 0}^2 \sum_{o \in \mathcal{A}_g} b(a,o) f_k(o|s_{t})  P(\text{level}=k|\mathcal{D}_{t-1}), \]
+where \(b(a,o) = 1\) if action \(a\) is a best response to opponent's
+action \(o\) (i.e.~it leads to a win).
+
+We assume participants choose actions through a softmax over these
+probabilities of best responses:
+\[P_t(a|s_t) = \frac{\exp\{\lambda B_t(a) \}}{\sum_{a' \in \mathcal{A}_g} \exp \{ \lambda B_t(a')\}}.\]
 where \(b(a,o) = 1\) if action \(a\) is a best response to opponent's
 action \(o\) (i.e.~it leads to a win).
 
@@ -914,11 +941,11 @@ Experiment 2.
 \hypertarget{model-comparison}{%
 \subsection{Model comparison}\label{model-comparison}}
 
-When considering which model fits best (Figure
-\ref{fig:exp-comp-models}), we find that in both experiments, the RL
-model described most participants' behaviour best, followed by the
-random (Nash) model. Relatively few participants were best described by
-one of the BCH models or the EWA model.
+When considering which single model fits participants behaviour over the
+whole experiment best, we find that in both experiments the RL model
+outperforms the other models, followed by the random (Nash) model
+(Figure \ref{fig:exp-comp-models}). Relatively few participants were
+best described by one of the BCH models or the EWA model.
 
 \begin{figure}
 
@@ -930,7 +957,7 @@ one of the BCH models or the EWA model.
 \end{figure}
 
 As the RL models don't transfer learning between games, this is at odds
-with the behavioural findings where we found evidence for such transfer.
+with the behavioural results, which showed evidence for such transfer.
 In order to investigate this discrepancy further, we plot the likelihood
 by trial for each game and three strategies: reinforcement learning
 (RL), Bayesian Cognitive Hierarchy with between-game transfer (BCH\_BT),
@@ -941,16 +968,19 @@ models. However, over time, the likelihood of the RL model increases and
 exceeds that of the BCH model. The same pattern holds for Experiment 2
 (Figure \ref{fig:exp2-lik-by-tr}). Again, the BCH\_BT model with
 between-game transfer has the highest likelihood in the early stages of
-the later games (apart from stage 1 of the shootout game, where the RL
+the later games (apart from stage 1 of the Shootout game, where the RL
 model is better). In later rounds, the likelihood of the RL model
 exceeds that of the BCH model.
 
 The fact that the likelihoods of the main strategies considered cross
-over in both experiments could be interpreted as indicative that
-participants switch between strategies as the games progress. According
-to this interpretation, participants base their responses in early
-rounds on the learned level of their opponents iterative reasoning,
-switching later to learned actions through reinforcement.
+over in both experiments is consistent with participants switching
+between strategies as the games progress. According to this
+interpretation, participants base their responses in early rounds on the
+learned level of their opponents iterative reasoning, switching later to
+learning good actions through reinforcement. \textbf{We initially did
+not predict this strategy switching. Whilst the likelihoods are
+suggestive, we sought an approach to formally test for strategy
+switching.}
 
 \hypertarget{hidden-markov-model-analysis-of-strategy-switching}{%
 \subsection{Hidden Markov model analysis of strategy
@@ -962,7 +992,7 @@ switching}\label{hidden-markov-model-analysis-of-strategy-switching}}
 
 }
 
-\caption{Experiment 1 likelihood by trial, game and opponent faced}\label{fig:exp1-lik-by-tr}
+\caption{Average likelihood of the random (Nash), reinforcement learning (RL) and Bayesian Cognitive Hierarchy model by trial, game, and opponent faced in Experiment 1.}\label{fig:exp1-lik-by-tr}
 \end{figure}
 
 \begin{figure}
@@ -971,7 +1001,7 @@ switching}\label{hidden-markov-model-analysis-of-strategy-switching}}
 
 }
 
-\caption{Experiment2 likelihood by trial, game and opponent faced}\label{fig:exp2-lik-by-tr}
+\caption{Average likelihood of the random (Nash), reinforcement learning (RL) and Bayesian Cognitive Hierarchy model by trial, stage, and game in Experiment 2.}\label{fig:exp2-lik-by-tr}
 \end{figure}
 
 We use hidden Markov models to test for strategy switching in
@@ -980,11 +1010,11 @@ between-game transfer, and Nash) correspond to latent states which
 determine the overt responses (actions chosen). The models allow for
 switching between the states (i.e.~strategies) over time. Hidden Markov
 models assume that an observable action at time \(t\) depends on a
-latent state at time \(t\). Second, it is assumed that the latent state
-at time \(t\) depends on the latent state at the previous time \(t-1\).
-The model is specified by the state-conditional action distributions
-(these are provided by the likelihood of the fitted models), an initial
-state distribution (the distribution over the strategies at the initial
+latent state at time \(t\). It is assumed that the latent state at time
+\(t\) depends on the latent state at the previous time \(t-1\). The
+model is specified by the state-conditional action distributions (these
+are provided by the likelihood of the fitted models), an initial state
+distribution (the distribution over the strategies at the initial
 round), and the state-transition probabilities (probability of switching
 from one state/strategy to another). Initial state probabilities and the
 transition probabilities were estimated with the depmixS4 package
@@ -1000,27 +1030,25 @@ a particular strategy, they continue using it throughout the experiment.
 
 }
 
-\caption{Experiment 1 posterior probability of strategies by game and opponent faced}\label{fig:exp1-posteriors-plot}
+\caption{Average posterior probability of each strategy by trial, game and opponent faced, in Experiment 1.}\label{fig:exp1-posteriors-plot}
 \end{figure}
 
 In Experiment 1, a likelihood-ratio test shows that the HMM model with
 switching fits significantly better than the non-switching one,
 \(\chi^2(6) = 211.09\), \(p < .001\). We should note that as the no
 switch model involves restricting parameters of the switching model on
-the bounds of the parameter space, the asymptotic \(p\)-value of this
-test may not be reliable. The switching model (AIC =
-\ensuremath{1.463687\times 10^{4}}, BIC =
-\ensuremath{1.469256\times 10^{4}}) fits also better than the
-non-switching model (AIC = \ensuremath{1.483596\times 10^{4}}, BIC =
-\ensuremath{1.484988\times 10^{4}}) according to the AIC and BIC. This
-provides further statistical evidence in favour of the hypothesis that
-participants switch between strategies. Figure
-\ref{fig:exp1-posteriors-plot} depicts the average (across participants)
-posterior probabilities of each state (strategy), as a function of trial
-and opponent faced. As can be seen, there is evidence of strategy
-switching in the FWG and Numbers games: Initially, participants appear
-to use a random strategy (in the first round of a game, there is no way
-to predict the opponent's action), after which the BCH strategy becomes
+the bounds of the parameter space, the \(p\)-value of this test may not
+correspond to the true Type-1 error rate. We therefore also consider
+model selection criteria. These also show that the switching model (AIC
+= 14636.87, BIC = 14692.56) fits better than the non-switching model
+(AIC = 14835.96, BIC = 14849.88). This provides further statistical
+evidence in favour of the hypothesis that participants switch between
+strategies. Figure \ref{fig:exp1-posteriors-plot} depicts the average
+posterior probability of each strategy, as a function of trial and
+opponent faced. As can be seen, there is evidence of strategy switching
+in the FWG and Numbers games: Initially, participants appear to use a
+random strategy (in the first round of a game, there is no way to
+predict the opponent's action), after which the BCH strategy becomes
 dominant. In the later rounds of the games, the RL strategy becomes
 dominant, however.
 
@@ -1030,67 +1058,54 @@ dominant, however.
 
 }
 
-\caption{Experiment 2 posterior probability of strategies by game and opponent faced}\label{fig:exp2-posteriors-plot}
+\caption{Average posterior probability of each strategy by trial, stage, and game in Experiment 2.}\label{fig:exp2-posteriors-plot}
 \end{figure}
 
-In Experiment 2, the switching model (AIC =
-\ensuremath{1.687997\times 10^{4}}, BIC =
-\ensuremath{1.693681\times 10^{4}}) again fits better than the
-restricted non-switching model (AIC =
-\ensuremath{1.693841\times 10^{4}}, BIC =
-\ensuremath{1.695262\times 10^{4}}), \(\chi^2(6) = 70.44\),
-\(p < .001\). The posterior probabilities of the strategies (Figure
+In Experiment 2, the switching model (AIC = 16879.97, BIC = 16936.81)
+again fits better than the restricted non-switching model (AIC =
+16938.41, BIC = 16952.62), \(\chi^2(6) = 70.44\), \(p < .001\). The
+posterior probabilities of the strategies (Figure
 \ref{fig:exp2-posteriors-plot}) show very clear evidence of strategy
 switching across games and stages, from using a BCH model in the initial
 rounds to an RL strategy later on.
 
-\hypertarget{discussion-1}{%
-\section{Discussion}\label{discussion-1}}
+\hypertarget{discussion}{%
+\section{Discussion}\label{discussion}}
 
 In this study, we investigated human learning transfer across games by
 making human participants play against computer agents with limited
 levels of iterated reasoning. We were interested in whether participants
 learn about the strategy of their opponent and transfer such knowledge
-between games, and whether this is modulated by the similarity between
-games and the sophistication of the agent.
+between games.
 
 The results of our first experiment show that the majority of
 participants learnt to adapt to their opponent's strategy over multiple
-interactions, and generalised this learning to a similar game.
-Performance in early rounds indicated that learning transfer was
-moderated by the degree of similarity between games. In the second
-experiment, participants faced both types of opponents, allowing for a
-stronger test of opponent modelling, as participants would need to learn
-a different strategy for each opponent. In Experiment 1, participants
-could learn a single strategy for each game, making opponent modelling
-possibly less pertinent. In Experiment 2, we again found clear evidence
-of transfer in the early rounds of the later games. In addition to the
-moderation of transfer by the similarity between games, we also found
-that learning transfer was moderated by the type of opponent faced:
-Transfer was harder when facing the level-2 opponent as compared to the
-level-1 opponent. That evidence for transfer was weaker when facing the
-more sophisticated level-2 opponent may be due to a higher difficulty of
-learning that opponent's strategy. If it is more difficult to establish
-a model of the level-2 opponent, there is likely less knowledge to
-transfer to the new game. A player cannot transfer what they have not
-learnt.
+rounds of the Rock-Paper-Scissors (RPS) game, and generalised this
+learning to a similar (Fire-Water-Grass) and less similar (Numbers)
+game. In the second experiment, participants faced both types of
+opponents, allowing for a stronger test of opponent modelling, as
+participants would need to learn a different strategy for each opponent.
+In Experiment 1, participants could learn a single strategy for each
+game, making opponent modelling possibly less pertinent. In Experiment
+2, we again found clear evidence of transfer in the early rounds of the
+later games.
 
 What exactly did the players learn in the first game (RPS) that allowed
 them to beat their opponent in the later games (FWG, and Numbers or
 Shootout)? What did the players learn specifically about their
 opponent's strategy and what form did this learning take? One possible
 answer is that participants learned simple rules based on last round
-play. For instance, ``play scissors whenever my opponent played rock in
-last round'', or ``play paper whenever the last round play was either
-rock or scissors''. These are the type of strategies that are learned by
+play. For instance, ``play Scissors whenever my opponent played Rock in
+last round,'' or ``play Paper whenever the last round play was either
+Rock or Scissors.'' These are the type of strategies that are learned by
 the model-free reinforcement learning we used in our computational
 modelling. While this strategy fitted participants' actions the best
 overall, there are at least two reasons why this account is not
 satisfactory as a complete description of participants' behaviour.
 Firstly, the learned strategies are not transferable to new games. There
-is no simple way to map ``play scissors whenever my opponent played rock
-in last round'' in the RPS game to ``play grass whenever my opponent
-played fire in last round''. Such a mapping may be possible by
+is no simple way to map ``play Scissors whenever my opponent played Rock
+in last round'' in the RPS game to ``play Grass whenever my opponent
+played Fire in last round.'' Such a mapping may be possible by
 translating the rules and structure from RPS to FWG, but model-free
 reinforcement learning lacks the tools to do this: Model-free
 reinforcement learning would need to start from scratch in each new
@@ -1099,26 +1114,27 @@ their opponent's strategy in early rounds of new games. Secondly, a
 reinforcement learning strategy would fare equally well against the
 level-1 and level-2 opponent. Whilst choosing different actions, the
 contingency between the state (last round play) and actions is the same
-for both opponents. Yet, we found that participants performed better
-against the level-1 opponent compared to the level-2 opponent. The
-difference in performance between the two types of opponent indicates
-that the actions of the more sophisticated level-2 opponent, or the best
-response to these, were somehow more difficult to predict.
+for both opponents. Yet, in Experiment 1, we found that participants
+performed better against the level-1 opponent compared to the level-2
+opponent. The difference in performance between the two types of
+opponent indicates that the actions of the more sophisticated level-2
+opponent, or the best response to these, were somehow more difficult to
+predict.
 
 We are left with two possible explanations: First, it is possible that
 participants discovered a heuristic that allowed them to beat their
 opponent without explicitly modelling their strategy, and that this
 heuristic is transferable to new games. Because of the cyclicity in
-action choices (e.g., rock beats scissors, scissors beats paper, paper
-beats rock), it is possible to beat a level-2 opponent most of the time
+action choices (e.g., Rock beats Scissors, Scissors beats Paper, Paper
+beats Rock), it is possible to beat a level-2 opponent most of the time
 by following a simple rule: Play in the next round whatever the opponent
 played in the last round. This is a rule that wins and is transferable
 to other games, as it does not depend on action labels. In the same
 vein, a heuristic that beats a level-1 player can be stated as ``Choose
-the action that would have been beaten by my previous action''.
-Intuitively, it seems that this heuristic for a level-2 player is
-simpler than that for a level-1 player, which is at odds with the
-finding that participants performed better against the level-1 opponent.
+the action that would have been beaten by my previous action.''
+Intuitively, it seems that the heuristic for a level-2 player is simpler
+than that for a level-1 player, which is at odds with the finding that
+participants performed better against the level-1 opponent.
 
 A second explanation is that participants engaged in iterative
 reasoning, inferring their opponent's beliefs and countering the
@@ -1134,22 +1150,29 @@ level-2 player, and beating a level-2 player requires being a level-3
 player. Intuitively, the additional step of iterative reasoning involved
 in beating a level-2 player makes the level-3 strategy more demanding
 and difficult to implement, which is consistent with the lower
-performance against the level-2 opponent.
+performance against the level-2 opponent. \textbf{We did not find a
+clear difference in performance against the two opponents in Experiment
+2, where participants faced both consecutively. Learning about the
+distinct strategies of two different opponents is likely more difficult
+than learning about a single opponent. And switching between opponents
+may place additional demands on memory and impose task switching costs.
+These factors may have masked the performance difference found in
+Experiment 1. Nevertheless, we found that participants learned to
+successfully exploit the strategies of both players in Experiment 2, as
+well as transferring their learning to new games.}
 
-The differences in performance between the two players, coupled with the
-finding of positive transfer, point to participants engaging in
-iterative reasoning, and learning something useful about their
-opponent's limitations in this regard. This is the type of learning
-encapsulated by our Bayesian Cognitive Hierarchy model. It involves the
-evaluation of explicit hypotheses and results in better problem-solving
-skills (Mandler 2004). Since it is less context dependent, this type of
+The difference in performance against the two opponents, coupled with
+evidence for successful transfer, point to participants engaging in
+iterative reasoning and learning something useful about their opponent's
+limitations in this regard. This is the type of learning encapsulated by
+our Bayesian Cognitive Hierarchy model. It involves the evaluation of
+explicit hypotheses and results in better problem-solving skills
+(Mandler 2004). Since it is less context dependent, this type of
 learning is generalizable to new situations, akin to the more general
 framework of rule-based learning explored by Stahl (Stahl 2000, 2003).
-\textbf{We have also asked participants to describe the strategy of the
-opponents at the end of the study and found that many participants used
-recursive reasoning expressions to answer that question, further
-confirming that these participants were indeed making inferences about
-the opponent depth of reasoning.}
+When asked to describe the strategy of their opponents at the end of the
+study, many participants made reference to a form of recursive
+reasoning, which provides additional support for this account.
 
 We admit that our implementation in the BCH models does not predict a
 performance difference between the types of opponents. Starting with an
@@ -1166,70 +1189,68 @@ these mechanisms would explain why learning the strategy of the level-2
 opponent is more difficult and slower than learning the strategy of the
 level-1 opponent.
 
-\textbf{In a post-hoc analysis}, using hidden Markov models, we found
-evidence of strategy switching between the BCH and RL strategies, and
-such switching seems more consistent with the latter idea. If predicting
-an opponent's actions through iterative reasoning is cognitively
-demanding and error-prone, it is resource-rational to switch to less
-costly yet equally successful strategies when these are available
-(Lieder and Griffiths 2020). Initially, a model-free reinforcement
-learning strategy will be less successful than an iterative reasoning
-one. However, given enough experience, it will be on par with an
-iterative reasoning strategy. As it involves simple state-action
-contingencies, a model-free RL strategy may also be computationally less
-costly, making it overall more effective to rely on this than iterative
-reasoning. This is similar to the arbitration between model-free and
-model-based RL (Daw, Niv, and Dayan 2005; Simon and Daw 2011; Wouter
-Kool, Joseph T. McGuire, Zev B. Rosen, Matthew M. Bovinick 2011). In
-repeated and well-practised situations, relying on habits allows one to
-save cognitive resources for other demands. However, when the
-environment -- or game -- changes, it is prudent to use all available
-resources to reorient oneself.
+Using hidden Markov models, we found evidence of strategy switching
+between the BCH and RL strategies, and such switching seems more
+consistent with the latter idea. If predicting an opponent's actions
+through iterative reasoning is cognitively demanding and error-prone, it
+is resource-rational to switch to less costly yet equally successful
+strategies when these are available (Lieder and Griffiths 2020).
+Initially, a model-free reinforcement learning strategy will be less
+successful than an iterative reasoning one. However, given enough
+experience, it will be on par with an iterative reasoning strategy. As
+it involves simple state-action contingencies, a model-free RL strategy
+may also be computationally less costly, making it overall more
+effective to rely on this than iterative reasoning. This is similar to
+the arbitration between model-free and model-based RL (Daw, Niv, and
+Dayan 2005; Simon and Daw 2011; Wouter Kool, Joseph T. McGuire, Zev B.
+Rosen, Matthew M. Bovinick 2011). In repeated and well-practised
+situations, relying on habits allows one to save cognitive resources for
+other demands. However, when the environment -- or game -- changes, it
+is prudent to use all available resources to reorient oneself.
 
-\textbf{A limitation of the current design is that the order of the
-games was not counterbalanced. We chose the current ordering as we
-believed it would be more conducive to learning the strategy of the
-opponent. Starting with a very familiar game (RPS) and then playing many
-rounds of an isomorphic game (FWG) allows participants plenty of
-interaction, in very similar settings, in order to learn something about
-how the opponent plays. We then chose to test generalisation in a
-dissimilar game. Counterbalacing might lead to participants starting
-with Numbers or Shootout, which would make learning the level of the
-opponent harder (Numbers have many uniformative ties and Shootout makes
-it hard to determine the degree of reasoning since some action
-predictions are consistent with different level-k opponents). This makes
-these games good candidates for testing generalisation of previsouly
-learned opponent models but poor environments to learn them in the first
-place. Since participants can't transfer what they have not learned, we
-expect that starting with these games might prohibit learning transfer.}
-
-Due to the current design, we can't rule out that part of the transfer
-effect found in early round scores is due to general practice effects
-over the games. Nevertheless, it is unlikely that the transfer effects
-are entirely due to such confounded practive effects. First, general
-practice effects would not depend on the level of sophistication of the
-opponent. However, we found that early round scores differed between the
-two types of opponents. Second, practice effects should be evident
-within a game and therefore lead to better performance in experiment 2
-when the participant meets the second opponent for the first time,
-compared to meeting the first opponent for the first time. This was not
-the case.
+\textbf{A limitation of the design of both experiments is that the order
+of the games was not counterbalanced. We chose for the order used as we
+believed it would be most conducive to learning the strategy of the
+opponent. Starting with a familiar game (RPS) would allow participants
+to focus on how their opponent plays, rather than also having to learn
+the rules of the game. A new but isomorphic game (FWG) allows for the
+most straightforward transfer. We reasoned that transfer to a less
+similar game (Numbers of Shootout), a stronger test of generalization,
+would be more likely given sufficient experience in two similar games.
+Determining the level of iterative reasoning in these latter games is
+more difficult (the Numbers game has many ties, whilst in Shootout
+actions are often consistent with different level-\(k\) opponents).
+Counterbalancing the order of the games would mean many participants
+would start with these more difficult games. Whilst we believe these
+games are good candidates for testing generalisation of previously
+learned opponent models, they are poor environments to learn them in the
+first place. Since participants can't transfer what they have not
+learned, we expect that starting with these games might prohibit
+learning transfer. However, we can't rule out that part of the transfer
+effects found for early round scores is due to general practice effects,
+or differences in the difficulty of the games. We find it unlikely that
+the transfer effects we found are entirely due to such confounded
+practice or difficulty effects. Firstly, general practice or difficulty
+effects should not depend on the level of the opponent. However, we
+found evidence that overall scores (Experiment 1) and early round scores
+(Experiment 2) differed between the two types of opponents. Secondly,
+practice effects would be evident within a game, but we found no main
+effect of stage on early-round scores in Experiment 2. }
 
 \hypertarget{conclusion}{%
 \section{Conclusion}\label{conclusion}}
 
-Our results show that people can successfully deviate from Nash
+In two experiments we found that people successfully deviate from Nash
 equilibrium play to exploit deviations from such play by their
-\textbf{computer} opponents. Moreover, people can transfer knowledge
-about the limitations of their computer opponents to new situations.
-This transfer of a model of the opponent depends on the similarity
-between the prior and new game, as well as the sophistication of the
-opponent. Transfer is better to similar games, and for less
-sophisticated agents. Within games, we found evidence for a switch from
-a more reasoning-based strategy which allows for between-game transfer,
-to a more habitual strategy which does not. This is consistent with a
-rational trade-off between the goal of maximising performance and
-minimizing the cost of computing the best possible actions.
+opponents. Moreover, people can transfer knowledge about the underlying
+limitations of their opponents' degree of iterative reasoning to new
+situations. Within games, we found evidence that people start new games
+with a reasoning-based strategy that allows them to transfer knowledge
+from other games. After gaining sufficient experience with the game,
+they move to a reinforcement learning strategy which does not require
+reasoning about the beliefs of their opponent. This is consistent with a
+resource-rational trade-off between the goal of maximising performance
+and minimizing the cost of computing the best possible actions.
 
 \hypertarget{declarations}{%
 \section{Declarations}\label{declarations}}
@@ -1273,167 +1294,182 @@ obtained from all participants at the start of the experiments.
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-batzilis2019behavior}{}%
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-batzilis2019behavior}{}}%
 Batzilis, Dimitris, Sonia Jaffe, Steven Levitt, John A List, and Jeffrey
-Picel. 2019. ``Behavior in Strategic Settings: Evidence from a Million
-Rock-Paper-Scissors Games.'' \emph{Games} 10 (2). Multidisciplinary
-Digital Publishing Institute: 18.
+Picel. 2019. {``Behavior in Strategic Settings: Evidence from a Million
+Rock-Paper-Scissors Games.''} \emph{Games} 10 (2): 18.
 
-\leavevmode\hypertarget{ref-brockbank2021formalizing}{}%
-Brockbank, Erik, and Edward Vul. 2021. ``Formalizing Opponent Modeling
-with the Rock, Paper, Scissors Game.'' \emph{Games} 12 (3).
-Multidisciplinary Digital Publishing Institute: 70.
+\leavevmode\vadjust pre{\hypertarget{ref-brockbank2021formalizing}{}}%
+Brockbank, Erik, and Edward Vul. 2021. {``Formalizing Opponent Modeling
+with the Rock, Paper, Scissors Game.''} \emph{Games} 12 (3): 70.
 
-\leavevmode\hypertarget{ref-camerer2003behavioural}{}%
-Camerer, Colin F. 2003. ``Behavioural Studies of Strategic Thinking in
-Games.'' \emph{Trends in Cognitive Sciences} 7 (5). Elsevier: 225--31.
+\leavevmode\vadjust pre{\hypertarget{ref-camerer2003behavioural}{}}%
+Camerer, Colin F. 2003. {``Behavioural Studies of Strategic Thinking in
+Games.''} \emph{Trends in Cognitive Sciences} 7 (5): 225--31.
 
-\leavevmode\hypertarget{ref-camerer2004cognitive}{}%
-Camerer, Colin F, Teck-Hua Ho, and Juin-Kuan Chong. 2004. ``A Cognitive
-Hierarchy Model of Games.'' \emph{The Quarterly Journal of Economics}
-119 (3). MIT Press: 861--98.
+\leavevmode\vadjust pre{\hypertarget{ref-camerer2004cognitive}{}}%
+Camerer, Colin F, Teck-Hua Ho, and Juin-Kuan Chong. 2004. {``A Cognitive
+Hierarchy Model of Games.''} \emph{The Quarterly Journal of Economics}
+119 (3): 861--98.
 
-\leavevmode\hypertarget{ref-camerer1997experience}{}%
-Camerer, Colin, Teck-Hua Ho, and Others. 1997. ``Experience-weighted
-attraction learning in games: A unifying approach.''
+\leavevmode\vadjust pre{\hypertarget{ref-camerer1997experience}{}}%
+Camerer, Colin F, Teck-Hua Ho, and Others. 1997. {``{Experience-weighted
+attraction learning in games: A unifying approach}.''}
 
-\leavevmode\hypertarget{ref-knez2000}{}%
-Camerer, Colin, and Marc Knez. 2000. ``Increasing Cooperation in
+\leavevmode\vadjust pre{\hypertarget{ref-knez2000}{}}%
+Camerer, Colin F, and Marc Knez. 2000. {``{Increasing Cooperation in
 Prisoner's Dilemmas by Establishing a Precedent of Efficiency in
-Coordination Games.''
+Coordination Games}.''}
 
-\leavevmode\hypertarget{ref-cheung1994learning}{}%
-Cheung, Yin-Wong, and Daniel Friedman. 1994. \emph{Learning in
-evolutionary games: some laboratory results}. University of California,
+\leavevmode\vadjust pre{\hypertarget{ref-cheung1994learning}{}}%
+Cheung, Yin-Wong, and Daniel Friedman. 1994. \emph{{Learning in
+evolutionary games: some laboratory results}}. University of California,
 Santa Cruz.
 
-\leavevmode\hypertarget{ref-costa2001cognition}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-costa2001cognition}{}}%
 Costa-Gomes, Miguel, Vincent P Crawford, and Bruno Broseta. 2001.
-``Cognition and Behavior in Normal-Form Games: An Experimental Study.''
-\emph{Econometrica} 69 (5). Wiley Online Library: 1193--1235.
+{``Cognition and Behavior in Normal-Form Games: An Experimental
+Study.''} \emph{Econometrica} 69 (5): 1193--1235.
 
-\leavevmode\hypertarget{ref-daw2005uncertainty}{}%
-Daw, Nathaniel D, Yael Niv, and Peter Dayan. 2005. ``Uncertainty-Based
+\leavevmode\vadjust pre{\hypertarget{ref-daw2005uncertainty}{}}%
+Daw, Nathaniel D, Yael Niv, and Peter Dayan. 2005. {``Uncertainty-Based
 Competition Between Prefrontal and Dorsolateral Striatal Systems for
-Behavioral Control.'' \emph{Nature Neuroscience} 8 (12). Nature
-Publishing Group: 1704--11.
+Behavioral Control.''} \emph{Nature Neuroscience} 8 (12): 1704--11.
 
-\leavevmode\hypertarget{ref-dyson2019behavioural}{}%
-Dyson, Benjamin J. 2019. ``Behavioural Isomorphism, Cognitive Economy
-and Recursive Thought in Non-Transitive Game Strategy.'' \emph{Games} 10
-(3). Multidisciplinary Digital Publishing Institute: 32.
+\leavevmode\vadjust pre{\hypertarget{ref-dyson2019behavioural}{}}%
+Dyson, Benjamin James. 2019. {``Behavioural Isomorphism, Cognitive
+Economy and Recursive Thought in Non-Transitive Game Strategy.''}
+\emph{Games} 10 (3): 32.
 
-\leavevmode\hypertarget{ref-dyson2016negative}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-dyson2016negative}{}}%
 Dyson, Benjamin James, Jonathan Michael Paul Wilbiks, Raj Sandhu,
-Georgios Papanicolaou, and Jaimie Lintag. 2016. ``Negative Outcomes
-Evoke Cyclic Irrational Decisions in Rock, Paper, Scissors.''
-\emph{Scientific Reports} 6 (1). Nature Publishing Group: 1--6.
+Georgios Papanicolaou, and Jaimie Lintag. 2016. {``Negative Outcomes
+Evoke Cyclic Irrational Decisions in Rock, Paper, Scissors.''}
+\emph{Scientific Reports} 6 (1): 1--6.
 
-\leavevmode\hypertarget{ref-eyler2009winning}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-eyler2009winning}{}}%
 Eyler, Derek, Zachary Shalla, Andrew Doumaux, and Tim McDevitt. 2009.
-``Winning at Rock-Paper-Scissors.'' \emph{The College Mathematics
-Journal} 40 (2). JSTOR: 125--28.
+{``Winning at Rock-Paper-Scissors.''} \emph{The College Mathematics
+Journal} 40 (2): 125--28.
 
-\leavevmode\hypertarget{ref-ho2004economics}{}%
-Ho, Teck H, Colin F Camerer, and Juin-Kuan Chong. 2004. ``The economics
-of learning models: A self-tuning theory of learning in games.''
-California Institute of Technology.
+\leavevmode\vadjust pre{\hypertarget{ref-goodie_levels_2012}{}}%
+Goodie, Adam S., Prashant Doshi, and Diana L. Young. 2012. {``Levels of
+Theory-of-Mind Reasoning in Competitive Games.''} \emph{Journal of
+Behavioral Decision Making} 25 (1): 95--108.
+\url{https://doi.org/10.1002/bdm.717}.
 
-\leavevmode\hypertarget{ref-ho1998iterated}{}%
-Ho, Teck-Hua, Colin Camerer, and Keith Weigelt. 1998. ``Iterated
+\leavevmode\vadjust pre{\hypertarget{ref-hedden_what_2002}{}}%
+Hedden, Trey, and Jun Zhang. 2002. {``What Do You Think {I} Think You
+Think?: Strategic Reasoning in Matrix Games.''} \emph{Cognition} 85 (1):
+1--36. \url{https://doi.org/10.1016/S0010-0277(02)00054-9}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-ho2004economics}{}}%
+Ho, Teck-Hua, Colin F Camerer, and Juin-Kuan Chong. 2004. {``The
+Economics of Learning Models: A Self-Tuning Theory of Learning in
+Games.''}
+
+\leavevmode\vadjust pre{\hypertarget{ref-ho1998iterated}{}}%
+Ho, Teck-Hua, Colin F Camerer, and Keith Weigelt. 1998. {``{Iterated
 dominance and iterated best response in experimental" p-beauty
-contests".'' \emph{The American Economic Review} 88 (4). JSTOR: 947--69.
+contests"}.''} \emph{The American Economic Review} 88 (4): 947--69.
 
-\leavevmode\hypertarget{ref-Lake2017}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Lake2017}{}}%
 Lake, Brenden M., Tomer D. Ullman, Joshua B. Tenenbaum, and Samuel J.
-Gershman. 2017. ``Building machines that learn and think like people.''
-\emph{Behavioral and Brain Sciences} 40. Cambridge University Press.
+Gershman. 2017. {``{Building machines that learn and think like
+people}.''} \emph{Behavioral and Brain Sciences} 40.
 \url{https://doi.org/10.1017/S0140525X16001837}.
 
-\leavevmode\hypertarget{ref-lieder2020resource}{}%
-Lieder, Falk, and Thomas L Griffiths. 2020. ``Resource-Rational
+\leavevmode\vadjust pre{\hypertarget{ref-lieder2020resource}{}}%
+Lieder, Falk, and Thomas L Griffiths. 2020. {``Resource-Rational
 Analysis: Understanding Human Cognition as the Optimal Use of Limited
-Computational Resources.'' \emph{Behavioral and Brain Sciences} 43.
-Cambridge University Press.
+Computational Resources.''} \emph{Behavioral and Brain Sciences} 43.
 
-\leavevmode\hypertarget{ref-mandler2004foundations}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-mandler2004foundations}{}}%
 Mandler, Jean Matter. 2004. \emph{The Foundations of Mind: Origins of
 Conceptual Thought}. Oxford University Press.
 
-\leavevmode\hypertarget{ref-mertens1990repeated}{}%
-Mertens, Jean-François. 1990. ``Repeated games.'' In \emph{Game Theory
-and Applications}, 77--130. Elsevier.
+\leavevmode\vadjust pre{\hypertarget{ref-mertens1990repeated}{}}%
+Mertens, Jean-François. 1990. {``{Repeated games}.''} In \emph{Game
+Theory and Applications}, 77--130. Elsevier.
 
-\leavevmode\hypertarget{ref-R-DEoptim}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-R-DEoptim}{}}%
 Mullen, Katharine, David Ardia, David Gil, Donald Windover, and James
-Cline. 2011. ``DEoptim: An R Package for Global Optimization by
-Differential Evolution.'' \emph{Journal of Statistical Software} 40 (6):
-1--26. \url{https://doi.org/10.18637/jss.v040.i06}.
+Cline. 2011. {``{DEoptim}: An {R} Package for Global Optimization by
+{D}ifferential {E}volution.''} \emph{Journal of Statistical Software} 40
+(6): 1--26. \url{https://doi.org/10.18637/jss.v040.i06}.
 
-\leavevmode\hypertarget{ref-nagel1995unraveling}{}%
-Nagel, Rosemarie. 1995. ``Unraveling in Guessing Games: An Experimental
-Study.'' \emph{The American Economic Review} 85 (5). JSTOR: 1313--26.
+\leavevmode\vadjust pre{\hypertarget{ref-nagel1995unraveling}{}}%
+Nagel, Rosemarie. 1995. {``Unraveling in Guessing Games: An Experimental
+Study.''} \emph{The American Economic Review} 85 (5): 1313--26.
 
-\leavevmode\hypertarget{ref-shachat2004we}{}%
-Shachat, Jason, and J Todd Swarthout. 2004. ``Do we detect and exploit
-mixed strategy play by opponents?'' \emph{Mathematical Methods of
-Operations Research} 59 (3). Springer: 359--73.
+\leavevmode\vadjust pre{\hypertarget{ref-shachat2004we}{}}%
+Shachat, Jason, and J Todd Swarthout. 2004. {``{Do we detect and exploit
+mixed strategy play by opponents?}''} \emph{Mathematical Methods of
+Operations Research} 59 (3): 359--73.
 
-\leavevmode\hypertarget{ref-Simon_Daw_11}{}%
-Simon, Dylan A., and Nathaniel D. Daw. 2011. ``Environmental statistics
-and the trade-off between model-based and TD learning in humans.''
-\emph{Advances in Neural Information Processing Systems 24: 25th Annual
-Conference on Neural Information Processing Systems 2011, NIPS 2011},
-1--9.
+\leavevmode\vadjust pre{\hypertarget{ref-Simon_Daw_11}{}}%
+Simon, Dylan A., and Nathaniel D. Daw. 2011. {``{Environmental
+statistics and the trade-off between model-based and TD learning in
+humans}.''} \emph{Advances in Neural Information Processing Systems 24:
+25th Annual Conference on Neural Information Processing Systems 2011,
+NIPS 2011}, 1--9.
 
-\leavevmode\hypertarget{ref-spiliopoulos2013strategic}{}%
-Spiliopoulos, Leonidas. 2013. ``Strategic adaptation of humans playing
-computer algorithms in a repeated constant-sum game.'' \emph{Autonomous
-Agents and Multi-Agent Systems} 27 (1). Springer: 131--60.
+\leavevmode\vadjust pre{\hypertarget{ref-spiliopoulos2013strategic}{}}%
+Spiliopoulos, Leonidas. 2013. {``{Strategic adaptation of humans playing
+computer algorithms in a repeated constant-sum game}.''}
+\emph{Autonomous Agents and Multi-Agent Systems} 27 (1): 131--60.
 
-\leavevmode\hypertarget{ref-stahl2000rule}{}%
-Stahl, Dale O. 2000. ``Rule Learning in Symmetric Normal-Form Games:
-Theory and Evidence.'' \emph{Games and Economic Behavior} 32 (1).
-Elsevier: 105--38.
+\leavevmode\vadjust pre{\hypertarget{ref-stahl2000rule}{}}%
+Stahl, Dale O. 2000. {``Rule Learning in Symmetric Normal-Form Games:
+Theory and Evidence.''} \emph{Games and Economic Behavior} 32 (1):
+105--38.
 
-\leavevmode\hypertarget{ref-stahl2003sophisticated}{}%
----------. 2003. ``Sophisticated Learning and Learning Sophistication.''
-\emph{Available at SSRN 410921}.
+\leavevmode\vadjust pre{\hypertarget{ref-stahl2003sophisticated}{}}%
+---------. 2003. {``Sophisticated Learning and Learning
+Sophistication.''} \emph{Available at SSRN 410921}.
 
-\leavevmode\hypertarget{ref-stahl1995players}{}%
-Stahl, Dale O, and Paul W Wilson. 1995. ``On players models of other
-players: Theory and experimental evidence.'' \emph{Games and Economic
-Behavior} 10 (1). Elsevier: 218--54.
+\leavevmode\vadjust pre{\hypertarget{ref-stahl1995players}{}}%
+Stahl, Dale O, and Paul W Wilson. 1995. {``{On players models of other
+players: Theory and experimental evidence}.''} \emph{Games and Economic
+Behavior} 10 (1): 218--54.
 
-\leavevmode\hypertarget{ref-R-depmixS4}{}%
-Visser, Ingmar, and Maarten Speekenbrink. 2010. ``depmixS4: An R Package
-for Hidden Markov Models.'' \emph{Journal of Statistical Software} 36
-(7): 1--21. \url{http://www.jstatsoft.org/v36/i07/}.
+\leavevmode\vadjust pre{\hypertarget{ref-R-depmixS4}{}}%
+Visser, Ingmar, and Maarten Speekenbrink. 2010. {``{depmixS4}: An {R}
+Package for Hidden Markov Models.''} \emph{Journal of Statistical
+Software} 36 (7): 1--21. \url{http://www.jstatsoft.org/v36/i07/}.
 
-\leavevmode\hypertarget{ref-wang2014social}{}%
-Wang, Zhijian, Bin Xu, and Hai-Jun Zhou. 2014. ``Social Cycling and
-Conditional Responses in the Rock-Paper-Scissors Game.''
-\emph{Scientific Reports} 4 (1). Nature Publishing Group: 1--7.
+\leavevmode\vadjust pre{\hypertarget{ref-wang2014social}{}}%
+Wang, Zhijian, Bin Xu, and Hai-Jun Zhou. 2014. {``Social Cycling and
+Conditional Responses in the Rock-Paper-Scissors Game.''}
+\emph{Scientific Reports} 4 (1): 1--7.
 
-\leavevmode\hypertarget{ref-watkins1992q}{}%
-Watkins, Christopher J C H, and Peter Dayan. 1992. ``Q-learning.''
-\emph{Machine Learning} 8 (3-4). Springer: 279--92.
+\leavevmode\vadjust pre{\hypertarget{ref-watkins1992q}{}}%
+Watkins, Christopher J C H, and Peter Dayan. 1992. {``{Q-learning}.''}
+\emph{Machine Learning} 8 (3-4): 279--92.
 
-\leavevmode\hypertarget{ref-Kool_2011}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Kool_2011}{}}%
 Wouter Kool, Joseph T. McGuire, Zev B. Rosen, Matthew M. Bovinick. 2011.
-``Decision Making and the Avoidance of Cognitive Demand.''
+{``{Decision Making and the Avoidance of Cognitive Demand}.''}
 \emph{Experimental Psychology}.
 \url{https://doi.org/10.2996/kmj/1138846322}.
 
-\leavevmode\hypertarget{ref-xu2013cycle}{}%
-Xu, Bin, Hai-Jun Zhou, and Zhijian Wang. 2013. ``Cycle Frequency in
+\leavevmode\vadjust pre{\hypertarget{ref-xu2013cycle}{}}%
+Xu, Bin, Hai-Jun Zhou, and Zhijian Wang. 2013. {``Cycle Frequency in
 Standard Rock--Paper--Scissors Games: Evidence from Experimental
-Economics.'' \emph{Physica A: Statistical Mechanics and Its
-Applications} 392 (20). Elsevier: 4997--5005.
+Economics.''} \emph{Physica A: Statistical Mechanics and Its
+Applications} 392 (20): 4997--5005.
+
+\leavevmode\vadjust pre{\hypertarget{ref-zhang_rock-paper-scissors_2021}{}}%
+Zhang, Hanshu, Frederic Moisan, and Cleotilde Gonzalez. 2021.
+{``Rock-{Paper}-{Scissors Play}: Beyond the {Win}-{Stay}/{Lose}-{Change
+Strategy}.''} \emph{Games} 12 (3): 52.
+\url{https://doi.org/10.3390/g12030052}.
+
+\end{CSLReferences}
 
 
 \bibliographystyle{spphys}
 \bibliography{Mendeley2.bib}
-
 
 \end{document}

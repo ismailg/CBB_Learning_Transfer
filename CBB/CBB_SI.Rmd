@@ -1,0 +1,139 @@
+---
+title: 'Transfer of learned opponent models in zero sum games: Supplementary Information'
+author: "Ismail Guennouni and Maarten Speekenbrink"
+output: pdf_document
+bibliography: Mendeley2.bib
+biblio-style: spphys
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, message=FALSE)
+```
+
+```{r load-packages, include = FALSE}
+library(papaja)
+library(kableExtra)
+library(dplyr)
+library(afex)
+library(lsmeans)
+
+```
+
+# Experiment 1
+
+## Analysis of overall scores
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+dat1 <- read.csv("../data20180719.csv") 
+
+# transform 'winner' variable in numeric score
+dat1$score <- recode(dat1$winner, human = 1, tie = 0, ai = -1)
+# create a new variable 'block' with round 1...25 = block 1 and round 26...50 as block 2
+dat1$block <- factor(as.numeric(cut(dat1$round,2)),labels =c("first half", "second half"))
+
+# create a new variable "game" as a factor variable of games
+dat1$game <- factor(dat1$game, labels = c("RPS","FWG","Numbers"), levels=c("rps","fwg","numbers"))
+
+#Group data by human_id and calculate mean score per block of each game.
+dat1_ave <- dat1 %>% 
+  group_by(human_id, condition, game, block) %>% 
+      summarize(block_score = mean(score))
+
+mod1 <- mixed(block_score ~ game*condition*block + (1| human_id), data=dat1_ave, type = 3, method = "KR")
+em_opp <- emmeans::emmeans(mod1,~condition)
+em_block <- emmeans::emmeans(mod1,~block)
+em_game <- emmeans::emmeans(mod1,~game)
+em_game_block <- emmeans::emmeans(mod1,~game*block)
+
+mod1a <- mixed(block_score ~ game*condition*block + (1 + block| human_id), data=dat1_ave, type = 3, method = "KR")
+```
+
+```{r, echo=FALSE}
+knitr::kable(mod1$anova_table, caption="\\label{tab:score-mixed-exp1} Results from linear mixed-effects model for overall score by Opponent, Game, and Block in Experiment 1.", booktabs=TRUE, digits=c(0,0,2,3), linesep="")
+```
+
+Average scores in each half of each game were analysed with with a linear-mixed effects model, with fixed effects for Game, Opponent, and Block, as well as all interactions, and participant-wise random intercepts. More complex models with additional random effects provided boundary singular solutions, but qualitatively similar results. For the $F$-tests, we used the Kenward-Roger approximation to the degrees of freedom, as implemented in the R package afex [@R-afex]. The results are provided in Table \ref{tab:score-mixed-exp1}. We find a significant main effect of Opponent, which is due to participants scoring higher against the level-1 (`r papaja::apa_print(em_opp)$estimate$Level1`) than against the level-2 opponent (`r papaja::apa_print(em_opp)$estimate$Level2`). Note that the strategies of both type of opponent are equally consistent, and hence in principle equally exploitable. The difference in performance against the two types of player indicates that participants found it more difficult to exploit the more sophisticated level-2 opponent than the comparatively less sophisticated level-1 opponent. This is consistent with participants employing iterative reasoning themselves, rather than simple contingency learning, as such reasoning is more involved for a level-2 than a level-1 opponent. A significant main effect of Block indicates shows that the score in the first half of each game (`r papaja::apa_print(em_block)$estimate$firsthalf`) was significantly lower than in the second half (`r papaja::apa_print(em_block)$estimate$secondhalf`), reflecting within-game learning. A main effect of Game shows that participants obtained the lowest score in the RPS game (`r papaja::apa_print(em_game)$estimate$RPS`), the highest in the FWG game (`r papaja::apa_print(em_game)$estimate$FWG`), with an intermediate score in Numbers (`r papaja::apa_print(em_game)$estimate$Numbers`). A significant interaction between game and block reflects greater within-game learning in RPS, `r papaja::apa_print(pairs(em_game_block, by = "game", reverse=TRUE))$full_result$RPS_secondhalf_firsthalf`, compared to FWG, `r papaja::apa_print(pairs(em_game_block, by = "game", reverse=TRUE))$full_result$FWG_secondhalf_firsthalf`, or Numbers, `r papaja::apa_print(pairs(em_game_block, by = "game", reverse=TRUE))$full_result$Numbers_secondhalf_firsthalf`.
+
+## Analysis of early-round scores
+
+```{r, results='hide'}
+exp1_dat2_6 <- subset(dat1,round >1 & round <7, drop =TRUE) %>% 
+  group_by(human_id,condition,game) %>% 
+      summarise(early_score = mean(score))
+
+# setting contrast to compare early score between games across levels 
+exp1_dat2_6$game <- as.factor(exp1_dat2_6$game)
+exp1_dat2_6$condition <- as.factor(exp1_dat2_6$condition)
+
+# Mixed effects Model: Random intercept for participants
+lme_early <- mixed(early_score ~ game*condition + (1 | human_id),data=exp1_dat2_6,type = 3, method = "KR")
+#summary(lme_early)
+#lme_early
+
+early_em_game <- emmeans::emmeans(lme_early, ~game)
+```
+
+```{r}
+knitr::kable(lme_early$anova_table, caption="\\label{tab:early-score-mixed-exp1} Results from linear mixed-effects model for early (round 2-6) score by Opponent and Game in Experiment 1.", booktabs=TRUE, digits=c(0,0,2,3), linesep="")
+```
+
+We used a similar linear mixed-effects model for early-round scores, with fixed effects for Opponent and Game, and random intercepts for participants. The results are provided in Table \ref{tab:early-score-mixed-exp1}. We found only a significant effect of Game. Early-round scores were lowest in RPS, `r apa_print(early_em_game)$estimate$RPS`, highest in FWG, `r apa_print(early_em_game)$estimate$FWG`, and intermediate in Numbers,  `r apa_print(early_em_game)$estimate$Numbers`.
+
+# Experiment 2
+
+## Analysis of overall scores
+
+```{r load_exp2_data, results='hide'}
+dat2 <- read.csv(file = "../Experiment_2/dat_exp2.csv")
+
+dat2_ave <- dat2 %>%
+  mutate(game = factor(game, labels = c("RPS","FWG","Shoot"), levels=c("rps","fwg","shootout")),
+         encounter = factor(interaction_lvl, labels=c("first","second"), levels=c("first interaction","second interaction")),
+         condition = condition.f,
+         opponent = opp_type) %>%
+  group_by(human_id, game, opponent, encounter, condition) %>% 
+  summarise(mean_score = mean(adj_score))
+
+mod2 <- mixed(mean_score ~ opponent*game*encounter*condition + (1 + opponent| human_id),data=dat2_ave, type = 3, method = "KR")
+
+em_game <- emmeans::emmeans(mod2,~game)
+em_game_opponent <- emmeans::emmeans(mod2,~game*opponent)
+
+```
+
+```{r, echo=FALSE}
+knitr::kable(mod2$anova_table, caption="\\label{tab:score-mixed-exp2} Results from linear mixed-effects model for overall score by Opponent, Game, Encounter, and Condition in Experiment 2.", booktabs=TRUE, digits=c(0,0,2,3), linesep="")
+```
+
+Average scores for each encounter of an opponent in each game were analysed with with a linear-mixed effects model, with fixed effects for Game (RPS, FWG, Shootout), Opponent (level-1, level-2), Encounter (first or second), and Condition (Facing level-1 or Level-2 opponent first), as well as all interactions, and participant-wise random intercepts and slopes for Opponent.^[More complex models with additional random effects provided boundary singular solutions, but qualitatively similar results.] The Kenward-Roger approximation to the degrees of freedom was used. The results are provided in Table \ref{tab:score-mixed-exp2}. We found a significant effect of Game, reflecting worst performance in RPS, `r papaja::apa_print(em_game)$estimate$RPS`, followed by FWG, `r papaja::apa_print(em_game)$estimate$FWG`, and then Shootout, `r papaja::apa_print(em_game)$estimate$Shoot`. The interaction between game indicates that performance is better against the level-2 compared to a level-1 opponent in RPS, `r papaja::apa_print(pairs(em_game_opponent, by = "game", reverse = TRUE))$full_result$RPS_Level_2_Level_1`, with little difference between opponent types in FWG, `r papaja::apa_print(pairs(em_game_opponent, by = "game", reverse = TRUE))$full_result$FWG_Level_2_Level_1` but worse performance in the Shootout game, `r papaja::apa_print(pairs(em_game_opponent, by = "game", reverse = TRUE))$full_result$Shoot_Level_2_Level_1`. 
+
+## Analysis of early-round scores
+
+```{r, results='hide'}
+exp2_dat2_6 <- subset(dat2, (round >1 & round < 7) & (interaction_lvl == "first interaction" ), drop =TRUE) %>%
+   mutate(game = factor(game, labels = c("RPS","FWG","Shoot"), levels=c("rps","fwg","shootout")),
+         encounter = factor(interaction_lvl, labels=c("first","second"), levels=c("first interaction","second interaction")),
+         condition = condition.f,
+         opponent = opp_type, 
+         stage = factor(stage)) %>%
+  group_by(human_id,condition.f,game.f,opp_type, game, encounter, condition, opponent, stage) %>%
+      summarise(early_score = mean(adj_score))
+
+#exp2_dat2_6$block <- 1
+#exp2_dat2_6$block[exp2_dat2_6$condition.f == "lvl_1 first" & exp2_dat2_6$opp_type == "Level_2"] <- 2
+#exp2_dat2_6$block[exp2_dat2_6$condition.f == "lvl_2 first" & exp2_dat2_6$opp_type == "Level_1"] <- 2
+#exp2_dat2_6$block <- factor(exp2_dat2_6$block)
+
+lme_early2 <- afex::mixed(early_score ~ game*opponent*stage + (1 + opponent| human_id), data=exp2_dat2_6, type = 3, method = "KR")
+
+early2_em_game <- emmeans::emmeans(lme_early2, ~game)
+early2_em_game_opponent <- emmeans::emmeans(lme_early2,~game*opponent)
+```
+
+```{r}
+knitr::kable(lme_early2$anova_table, caption="\\label{tab:early-score-mixed-exp2} Results from linear mixed-effects model for early (round 2-6) score by Opponent and Game in Experiment 2.", booktabs=TRUE, digits=c(0,0,2,3), linesep="")
+```
+
+We used a similar linear mixed-effects model for early-round scores, with fixed effects for Game (RPS, FWG, Shootout), Opponent (level-1, level-2), Block (stage 1 or 2), and correlated random intercepts and slopes for Block for participants. The results are provided in Table \ref{tab:early-score-mixed-exp2}. We found a significant effect of Game. Early-round scores were lowest in RPS, `r apa_print(early2_em_game)$estimate$RPS`, higher in FWG, `r apa_print(early2_em_game)$estimate$FWG`, and highest in Shootout, `r apa_print(early2_em_game)$estimate$Shoot`. In addition, we found a significant interaction between Opponent and Game. Whilst early performance was better against the level-1 than level-2 opponent in the Shootout game, `r papaja::apa_print(pairs(early2_em_game_opponent, by = "game", reverse=FALSE))$full_result$Shoot_Level_1_Level_2`, no such difference was found in RPS, `r papaja::apa_print(pairs(early2_em_game_opponent, by = "game", reverse=FALSE))$full_result$RPS_Level_1_Level_2`, or FWG, `r papaja::apa_print(pairs(early2_em_game_opponent, by = "game", reverse=FALSE))$full_result$FWG_Level_1_Level_2`.
+
+## References
