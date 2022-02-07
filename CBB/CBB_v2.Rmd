@@ -237,17 +237,6 @@ F_to_eta2(4.52, 2, 250)
 
 ```
 
-
-```{r exp1-3factor-plot, include= FALSE, fig.cap = "Performance in early rounds (2-6) per game and block across conditions in Experiment 1. Points are scores of individual participants and boxes reflect the 95\\% confidence intervals of the mean (center line equals the mean).", fig.align = "center", fig.width=8, fig.height=4}
-
-# Plot results by game and block (for all 3 games, learning is happening) 
-dat2 %>%
-  mutate(game = forcats::fct_recode(as.factor(game), RPS = "rps", FWG = "fwg", Numbers = "numbers")) %>%
-  mutate(condition = factor(condition, levels = c("Level1", "Level2"))) %>%
-  mutate(condition = forcats::fct_recode(condition, "Level 1" = "Level1", "Level 2" = "Level2")) %>%
-  ggboxplot(x = "game", y = "block_score", palette = c("#00AFBB", "#E7B800"),order = c("RPS", "FWG","Numbers"), fill="block", ylab = "Percentage score", xlab = "Games") +  facet_grid(. ~ condition)
-```
-
 <!-- ## Learning transfer -->
 
 
@@ -558,7 +547,7 @@ exp1_comp_table <- table(exp1_comp_results[, "condition"],c("Nash","BCH_BT","BCH
 
 ## Model comparison
 
-When considering which single model fits participants behaviour over the whole experiment best, we find that in both experiments the RL model outperforms the other models, followed by the random (Nash) model (Figure \ref{fig:exp-comp-models}). Relatively few participants were best described by one of the BCH models or the EWA model. <!-- We have also estimated BIC weights for each model and we confirm that <!-- (Figure \ \@ref(fig:xp1-BIC-weigths)), we confirm this . RL models have high BIC weights when they best fit the participants, and very few instances have high BIC weights for models other then RL, which fits the picture drawn by the histogram.  **IG: mentioned we looked at BIC weights and removed BIC wgt plot ** -->
+When considering which single model fits participants behaviour over the whole experiment best, we find that in both experiments the RL model outperforms the other models, followed by the random (Nash) model (Figure \ref{fig:exp-comp-models}). Relatively few participants were best described by one of the BCH models or the EWA model.
 
 ```{r exp-comp-models, fig.cap = "Number of participants best fitted by each model  in Experiment 1 and 2 according to the BIC. Results are seperated by opponent (Experiment 1) and which opponent they faced first (Experiment 2).", out.width="\\textwidth", fig.align='center'}
 
