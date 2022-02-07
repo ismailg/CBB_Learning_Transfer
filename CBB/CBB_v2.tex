@@ -141,9 +141,9 @@ question. The early literature on learning transfer in repeated games
 has mostly focused on the proportion of people who play normatively
 optimal (e.g.~Nash equilibrium play) or use salient (e.g.~risk
 dominance) actions in later games, having had experience with a similar
-game environment previously (Ho, Camerer, and Weigelt 1998; Camerer and
-Knez 2000). As is well-known, a Nash equilibrium means that all players
-in a game act such that no-one can unilaterally improve their
+game environment previously (Ho, Camerer, and Weigelt 1998; Knez and
+Camerer 2000). As is well-known, a Nash equilibrium means that all
+players in a game act such that no-one can unilaterally improve their
 performance by deviating from their strategy. When playing against an
 opponent with a Nash-optimal strategy, you can do no better than play
 according to the Nash-equilibrium strategy as well. However, when faced
@@ -211,7 +211,7 @@ Strategies based on iterative reasoning can explain non-equilibrium play
 in a range of games (Camerer 2003), such as the \(p\)-beauty contest
 game (Nagel 1995), dominance solvable games (Camerer, Ho, and Chong
 2004), and various standard normal form games (Costa-Gomes, Crawford,
-and Broseta 2001). They also underlies successful models in behavioural
+and Broseta 2001). They also underlie successful models in behavioural
 economics, such as Level-\(k\) and Cognitive Hierarchy models (Camerer,
 Ho, and Chong 2004), which posit that people assume their opponent
 applies a limited level of iterative reasoning, taking actions that are
@@ -276,7 +276,7 @@ determine the best response to this. We contrast this to a Reinforcement
 Learning model, which learns which actions are most rewarding given
 previous round play, by learning state-action values (the expected
 reward from taking an action in a given state). The Experience Weighted
-Attraction (EWA) model (Ho, Camerer, and Chong 2004), popular in
+Attraction (EWA) model (Ho, Camerer, and Chong 2007), popular in
 behavioral game theory, includes an additional mechanism to learn about
 the consequences of actions that were not actually taken.
 
@@ -418,8 +418,11 @@ strategies are contingent on the actions taken in the previous round.
 The choice of this type of strategy is consistent with evidence that
 humans strategically use information from last round play of their
 opponents in zero-sum games (Batzilis et al. 2019; Wang, Xu, and Zhou
-2014). Table \ref{tab:table-actions} shows an example of the computer
-opponent's actions in response to the previous round play.
+2014). It is also rational to do so given that the opponent bases their
+play on the previous round, as was the case for our computer players
+(Jones and Zhang 2004). Table \ref{tab:table-actions} shows an example
+of the computer opponent's actions in response to the previous round
+play.
 
 \begin{table}
 
@@ -805,9 +808,9 @@ represents an experience weight and can be interpreted as the number of
 ``observation-equivalents'' of past experience. We initialise it to 1 so
 initial attractions and reinforcement from payoffs are weighted equally.
 
-In the earlier version of the EWA model (Camerer, Ho, and Others 1997),
+In the earlier version of the EWA model (Camerer and Hua Ho 1999),
 \(\phi\) and \(\delta\) were time-invariant free parameters. In the
-self-tuning EWA model (Ho, Camerer, and Chong 2004), the values of
+self-tuning EWA model (Ho, Camerer, and Chong 2007), the values of
 \(\delta\) and \(\phi\) are learnt from experience. Over time,
 \(\delta\) is updated as
 \[\delta_{a}(t) = \begin{cases} 1 & \text{if }  R(a,o_{t}) \geq r_{t}  \\
@@ -827,7 +830,7 @@ deviations between the cumulative history vector \(h^{k}(t)\) and the
 immediate history \(r^k(t)\):
 \[S_{p}(t) = \sum_{k=1}^{|\mathcal{A}_g|} (h^{k}(t) - r^k(t))^2 \] For
 more details on the self-tuning EWA model, we refer the reader to (Ho,
-Camerer, and Chong 2004). As in the RL model above, actions are chosen
+Camerer, and Chong 2007). As in the RL model above, actions are chosen
 based on a softmax decision rule (Equation \ref{eq:softmax}). The
 self-tuning EWA has one free parameter: the inverse temperature of the
 softmax decision rule (\(\lambda\)).
@@ -861,8 +864,6 @@ action \(o\) (i.e.~it leads to a win).
 We assume participants choose actions through a softmax over these
 probabilities of best responses:
 \[P_t(a|s_t) = \frac{\exp\{\lambda B_t(a) \}}{\sum_{a' \in \mathcal{A}_g} \exp \{ \lambda B_t(a')\}}.\]
-where \(b(a,o) = 1\) if action \(a\) is a best response to opponent's
-action \(o\) (i.e.~it leads to a win).
 
 Unlike the models above, the BCH model allows for between-game transfer,
 as knowledge of the level of the opponent can be used to generate
@@ -953,10 +954,9 @@ over in both experiments is consistent with participants switching
 between strategies as the games progress. According to this
 interpretation, participants base their responses in early rounds on the
 learned level of their opponents iterative reasoning, switching later to
-learning good actions through reinforcement. \textbf{We initially did
-not predict this strategy switching. Whilst the likelihoods are
-suggestive, we sought an approach to formally test for strategy
-switching.}
+learning good actions through reinforcement. We initially did not
+predict this strategy switching. Whilst the likelihoods are suggestive,
+we sought an approach to formally test for strategy switching.
 
 \hypertarget{hidden-markov-model-analysis-of-strategy-switching}{%
 \subsection{Hidden Markov model analysis of strategy
@@ -1126,16 +1126,16 @@ level-2 player, and beating a level-2 player requires being a level-3
 player. Intuitively, the additional step of iterative reasoning involved
 in beating a level-2 player makes the level-3 strategy more demanding
 and difficult to implement, which is consistent with the lower
-performance against the level-2 opponent. \textbf{We did not find a
-clear difference in performance against the two opponents in Experiment
-2, where participants faced both consecutively. Learning about the
-distinct strategies of two different opponents is likely more difficult
-than learning about a single opponent. And switching between opponents
-may place additional demands on memory and impose task switching costs.
+performance against the level-2 opponent. We did not find a clear
+difference in performance against the two opponents in Experiment 2,
+where participants faced both consecutively. Learning about the distinct
+strategies of two different opponents is likely more difficult than
+learning about a single opponent. And switching between opponents may
+place additional demands on memory and impose task switching costs.
 These factors may have masked the performance difference found in
 Experiment 1. Nevertheless, we found that participants learned to
 successfully exploit the strategies of both players in Experiment 2, as
-well as transferring their learning to new games.}
+well as transferring their learning to new games.
 
 The difference in performance against the two opponents, coupled with
 evidence for successful transfer, point to participants engaging in
@@ -1178,21 +1178,21 @@ it involves simple state-action contingencies, a model-free RL strategy
 may also be computationally less costly, making it overall more
 effective to rely on this than iterative reasoning. This is similar to
 the arbitration between model-free and model-based RL (Daw, Niv, and
-Dayan 2005; Simon and Daw 2011; Wouter Kool, Joseph T. McGuire, Zev B.
-Rosen, Matthew M. Bovinick 2011). In repeated and well-practised
-situations, relying on habits allows one to save cognitive resources for
-other demands. However, when the environment -- or game -- changes, it
-is prudent to use all available resources to reorient oneself.
+Dayan 2005; Simon and Daw 2011; Wouter Kool 2011). In repeated and
+well-practised situations, relying on habits allows one to save
+cognitive resources for other demands. However, when the environment --
+or game -- changes, it is prudent to use all available resources to
+reorient oneself.
 
-\textbf{A limitation of the design of both experiments is that the order
-of the games was not counterbalanced. We chose for the order used as we
-believed it would be most conducive to learning the strategy of the
-opponent. Starting with a familiar game (RPS) would allow participants
-to focus on how their opponent plays, rather than also having to learn
-the rules of the game. A new but isomorphic game (FWG) allows for the
-most straightforward transfer. We reasoned that transfer to a less
-similar game (Numbers of Shootout), a stronger test of generalization,
-would be more likely given sufficient experience in two similar games.
+A limitation of the design of both experiments is that the order of the
+games was not counterbalanced. We chose the order used as we believed it
+would be most conducive to learning the strategy of the opponent.
+Starting with a familiar game (RPS) would allow participants to focus on
+how their opponent plays, rather than also having to learn the rules of
+the game. A new but isomorphic game (FWG) allows for the most
+straightforward transfer. We reasoned that transfer to a less similar
+game (Numbers of Shootout), a stronger test of generalization, would be
+more likely given sufficient experience in two similar games.
 Determining the level of iterative reasoning in these latter games is
 more difficult (the Numbers game has many ties, whilst in Shootout
 actions are often consistent with different level-\(k\) opponents).
@@ -1202,16 +1202,17 @@ games are good candidates for testing generalisation of previously
 learned opponent models, they are poor environments to learn them in the
 first place. Since participants can't transfer what they have not
 learned, we expect that starting with these games might prohibit
-learning transfer. However, we can't rule out that part of the transfer
-effects found for early round scores is due to general practice effects,
-or differences in the difficulty of the games. We find it unlikely that
-the transfer effects we found are entirely due to such confounded
-practice or difficulty effects. Firstly, general practice or difficulty
-effects should not depend on the level of the opponent. However, we
-found evidence that overall scores (Experiment 1) and early round scores
-(Experiment 2) differed between the two types of opponents. Secondly,
-practice effects would be evident within a game, but we found no main
-effect of stage on early-round scores in Experiment 2. }
+learning opponent models and thus their transfer. However, we can't rule
+out that part of the transfer effects found for early round scores is
+due to general practice effects, or differences in the difficulty of the
+games. We find it unlikely that the transfer effects we found are
+entirely due to such confounded practice or difficulty effects. Firstly,
+general practice or difficulty effects should not depend on the level of
+the opponent. However, we found evidence that overall scores (Experiment
+1) and early round scores (Experiment 2) differed between the two types
+of opponents. Secondly, practice effects would be evident within a game,
+but we found no main effect of stage on early-round scores in Experiment
+2.
 
 \hypertarget{conclusion}{%
 \section{Conclusion}\label{conclusion}}
@@ -1290,14 +1291,10 @@ Camerer, Colin F, Teck-Hua Ho, and Juin-Kuan Chong. 2004. ``A Cognitive
 Hierarchy Model of Games.'' \emph{The Quarterly Journal of Economics}
 119 (3). MIT Press: 861--98.
 
-\leavevmode\hypertarget{ref-camerer1997experience}{}%
-Camerer, Colin F, Teck-Hua Ho, and Others. 1997. ``Experience-weighted
-attraction learning in games: A unifying approach.''
-
-\leavevmode\hypertarget{ref-knez2000}{}%
-Camerer, Colin F, and Marc Knez. 2000. ``Increasing Cooperation in
-Prisoner's Dilemmas by Establishing a Precedent of Efficiency in
-Coordination Games.''
+\leavevmode\hypertarget{ref-camerer1999experience}{}%
+Camerer, Colin, and Teck Hua Ho. 1999. ``Experience-Weighted Attraction
+Learning in Normal Form Games.'' \emph{Econometrica} 67 (4). Wiley
+Online Library: 827--74.
 
 \leavevmode\hypertarget{ref-cheung1994learning}{}%
 Cheung, Yin-Wong, and Daniel Friedman. 1994. \emph{Learning in
@@ -1342,15 +1339,27 @@ Hedden, Trey, and Jun Zhang. 2002. ``What Do You Think I Think You
 Think?: Strategic Reasoning in Matrix Games.'' \emph{Cognition} 85 (1):
 1--36. \url{https://doi.org/10.1016/S0010-0277(02)00054-9}.
 
-\leavevmode\hypertarget{ref-ho2004economics}{}%
-Ho, Teck-Hua, Colin F Camerer, and Juin-Kuan Chong. 2004. ``The
-Economics of Learning Models: A Self-Tuning Theory of Learning in
-Games.'' California Institute of Technology.
+\leavevmode\hypertarget{ref-ho2007self}{}%
+Ho, Teck H, Colin F Camerer, and Juin-Kuan Chong. 2007. ``Self-Tuning
+Experience Weighted Attraction Learning in Games.'' \emph{Journal of
+Economic Theory} 133 (1). Elsevier: 177--98.
 
 \leavevmode\hypertarget{ref-ho1998iterated}{}%
 Ho, Teck-Hua, Colin F Camerer, and Keith Weigelt. 1998. ``Iterated
 dominance and iterated best response in experimental" p-beauty
 contests".'' \emph{The American Economic Review} 88 (4). JSTOR: 947--69.
+
+\leavevmode\hypertarget{ref-jones2004rationality}{}%
+Jones, Matt, and Jun Zhang. 2004. ``Rationality and Bounded Information
+in Repeated Games, with Application to the Iterated Prisoner's
+Dilemma.'' \emph{Journal of Mathematical Psychology} 48 (5). Elsevier:
+334--54.
+
+\leavevmode\hypertarget{ref-knez2000increasing}{}%
+Knez, Marc, and Colin Camerer. 2000. ``Increasing Cooperation in
+Prisoner's Dilemmas by Establishing a Precedent of Efficiency in
+Coordination Games.'' \emph{Organizational Behavior and Human Decision
+Processes} 82 (2). Elsevier: 194--216.
 
 \leavevmode\hypertarget{ref-Lake2017}{}%
 Lake, Brenden M., Tomer D. Ullman, Joshua B. Tenenbaum, and Samuel J.
@@ -1428,9 +1437,8 @@ Watkins, Christopher J C H, and Peter Dayan. 1992. ``Q-learning.''
 \emph{Machine Learning} 8 (3-4). Springer: 279--92.
 
 \leavevmode\hypertarget{ref-Kool_2011}{}%
-Wouter Kool, Joseph T. McGuire, Zev B. Rosen, Matthew M. Bovinick. 2011.
-``Decision Making and the Avoidance of Cognitive Demand.''
-\emph{Experimental Psychology}.
+Wouter Kool, Zev B. Rosen, Joseph T. McGuire. 2011. ``Decision Making
+and the Avoidance of Cognitive Demand.'' \emph{Experimental Psychology}.
 \url{https://doi.org/10.2996/kmj/1138846322}.
 
 \leavevmode\hypertarget{ref-xu2013cycle}{}%
