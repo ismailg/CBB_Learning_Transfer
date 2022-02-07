@@ -980,6 +980,9 @@ The study was conducted in line with the human participant guidelines of the 196
 ## Consent to Participate and Consent for Publication
 Informed consent for participation and publication of results was obtained from all participants at the start of the experiments.
 
+## Author Contributions
+IG and MS conceived and planned the experiment. IG collected the data. IG and MS analysed the data and built the computational models.
+
 # References
 
 ```{r create_r-references, warning= FALSE}
